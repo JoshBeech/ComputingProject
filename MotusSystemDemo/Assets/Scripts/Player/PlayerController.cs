@@ -5,9 +5,14 @@ public class PlayerController : MonoBehaviour
 {
     public GameObject TopDownCamera;
     public GameObject ShoulderCamera;
+    public bool CanInteract;
 
     public float MovementSpeed;
     public float TurnSpeed;
+
+    public GameObject InteractingNPC;
+
+    public DialogueManager TheDialogueManager;
 
     private CharacterController m_Controller;
 
@@ -15,17 +20,17 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         ShoulderCamera.SetActive(false);
+        CanInteract = false;
         m_Controller = GetComponent<CharacterController>();
     }
 
     void Update()
     {
-        if(Input.GetButtonDown("Fire1"))
+        if(CanInteract && Input.GetButtonDown("Interact"))
         {
             SwapCamera();
+            TheDialogueManager.StartDialogue(InteractingNPC);
         }
-
-        Debug.DrawLine(transform.position, transform.position + transform.forward);
     }
 
     // Update is called once per frame
