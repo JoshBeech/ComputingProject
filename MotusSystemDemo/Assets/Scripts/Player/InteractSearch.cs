@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class InteractSearch : MonoBehaviour
 {
     public Dictionary<string, GameObject> m_InteractableObjects = new Dictionary<string, GameObject>();
+    public Text InteractPrompt;
 
     private SphereCollider m_SphereCollider;
     private PlayerController m_PlayerController;
@@ -12,6 +14,7 @@ public class InteractSearch : MonoBehaviour
     {
         m_SphereCollider = GetComponent<SphereCollider>();
         m_PlayerController = GetComponentInParent<PlayerController>();
+        InteractPrompt.enabled = false;
     }
 
     // Update is called once per frame
@@ -19,13 +22,23 @@ public class InteractSearch : MonoBehaviour
     {
         if(m_InteractableObjects.Count > 0)
         {
-            RaycastHit l_Hit = new RaycastHit();
             foreach(KeyValuePair<string, GameObject> l_InteractableObject in m_InteractableObjects)
             {
-                if(Physics.Raycast(transform.position, transform.forward, out l_Hit, m_SphereCollider.radius))
+                if(Physics.Raycast(transform.position, transform.forward, m_SphereCollider.radius))
+                {             
+                    if(!InteractPrompt.enabled)
+                        InteractPrompt.enabled = true;
+
+                    InteractPrompt.text = "Press E to interact with " + l_InteractableObject.Key;
+                    if (!m_PlayerController.CanInteract)
+                        m_PlayerController.CanInteract = true;
+                }
+                else
                 {
-                    // Prompt player for interact
-                    Debug.Log("You can interact with this object");
+                    if(InteractPrompt.enabled)
+                        InteractPrompt.enabled = false;
+                    if (m_PlayerController.CanInteract)
+                        m_PlayerController.CanInteract = false;
                 }
             }
         }
