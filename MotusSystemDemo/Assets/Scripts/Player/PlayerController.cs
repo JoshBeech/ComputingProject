@@ -10,6 +10,10 @@ public class PlayerController : MonoBehaviour
     public float MovementSpeed;
     public float TurnSpeed;
 
+    public GameObject InteractingNPC;
+
+    public DialogueManager TheDialogueManager;
+
     private CharacterController m_Controller;
 
     // Use this for initialization
@@ -25,6 +29,7 @@ public class PlayerController : MonoBehaviour
         if(CanInteract && Input.GetButtonDown("Interact"))
         {
             SwapCamera();
+            TheDialogueManager.StartDialogue(InteractingNPC);
         }
     }
 
