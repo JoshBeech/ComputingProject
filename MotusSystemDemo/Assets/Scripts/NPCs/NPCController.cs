@@ -10,7 +10,8 @@ public class NPCController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        MotusSystem.TestClass HelloTest = new MotusSystem.TestClass();
+        Debug.Log(HelloTest.SayHello());
     }
 
     // Update is called once per frame
