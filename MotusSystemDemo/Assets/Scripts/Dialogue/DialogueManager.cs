@@ -38,7 +38,7 @@ public class DialogueManager : MonoBehaviour
     public void StartDialogue(GameObject p_NPC)
     {
         GetDialogue(p_NPC);
-        SetupDialogue();
+        SetupDialogue(p_NPC.GetComponent<NPCController>());
     }
 
     // Get dialogue from a given NPC
@@ -55,7 +55,7 @@ public class DialogueManager : MonoBehaviour
     }
 
     // Fill in dialogue box/wheel with information
-    public void SetupDialogue()
+    public void SetupDialogue(NPCController p_NPCController)
     {
         // Set Text
         m_NPCText.text = Speech[m_SpeechIndex];
@@ -77,6 +77,12 @@ public class DialogueManager : MonoBehaviour
                         break;
                     case 2:
                         l_WheelButton.onClick.AddListener(delegate { EndDialogue(); });
+                        break;
+                    case 3:
+                        l_WheelButton.onClick.AddListener(delegate { PositiveEmotionTest(p_NPCController); });
+                        break;
+                    case 4:
+                        l_WheelButton.onClick.AddListener(delegate { NegativeEmotionTest(p_NPCController); });
                         break;
                 }
             }
@@ -113,5 +119,19 @@ public class DialogueManager : MonoBehaviour
 
         ThePlayer.SwapCamera();
         transform.GetChild(0).gameObject.SetActive(false);
+    }
+
+
+    // TODO: Testing Functions, DELETE before submission
+    private void PositiveEmotionTest(NPCController p_NPCController)
+    {
+        p_NPCController.MotusTest.CreateSensation(MotusSystem.e_EmotionsState.JOY);
+        Debug.Log(p_NPCController.CheckCurrentState());
+    }
+
+    private void NegativeEmotionTest(NPCController p_NPCController)
+    {
+        p_NPCController.MotusTest.CreateSensation(MotusSystem.e_EmotionsState.SADNESS);
+        Debug.Log(p_NPCController.CheckCurrentState());
     }
 }
