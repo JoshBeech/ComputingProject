@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MotusSystem
+namespace MotusSystem.Emotions
 {
     /// <summary>
     /// Base class for all individual emotions, 
@@ -11,7 +11,13 @@ namespace MotusSystem
     /// </summary>
     public class Emotion
     {
-        public int Strength; 
+        public float Strength;
+        public e_EmotionsState EmotionID;
 
+        public Emotion(e_EmotionsState p_EmotionName, float p_StartStrength = 0.0f)
+        {
+            EmotionID = p_EmotionName;
+            Strength = p_StartStrength;
+        }
     }
 }
