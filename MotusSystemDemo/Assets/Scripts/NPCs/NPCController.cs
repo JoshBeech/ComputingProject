@@ -6,7 +6,8 @@ public class NPCController : MonoBehaviour
 {
     public string CharacterName;
     public List<string> TextLines = new List<string>();
-    public List<string> WheelOptions = new List<string>();
+    public List<string> WheelOptions1 = new List<string>();
+    public List<string> WheelOptions2 = new List<string>();
     public string[] CurrentEmotions;
 
     public Motus MotusTest;
