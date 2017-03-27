@@ -1,18 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using MotusSystem;
 
 public class NPCController : MonoBehaviour
 {
     public string CharacterName;
     public List<string> TextLines = new List<string>();
     public List<string> WheelOptions = new List<string>();
+    public string[] CurrentEmotions;
 
-    public MotusSystem.Motus MotusTest;
+    public Motus MotusTest;
     // Use this for initialization
     void Start()
     {
-        MotusTest = new MotusSystem.Motus();
-        Debug.Log(MotusTest.GetCurrentEmotionState());
+        MotusTest = new Motus();
+        UpdateEmotions();
     }
 
     // Update is called once per frame
@@ -21,8 +23,14 @@ public class NPCController : MonoBehaviour
 
     }
 
-    public string CheckCurrentState()
+    public void UpdateEmotions()
     {
-        return MotusTest.GetCurrentEmotionState();
+        CurrentEmotions = MotusTest.GetCurrentEmotionStates();        
+    }
+
+    public void Reaction(e_EmotionsState p_TargetEmotion)
+    {
+        MotusTest.CreateSensation(p_TargetEmotion);
+        UpdateEmotions();
     }
 }

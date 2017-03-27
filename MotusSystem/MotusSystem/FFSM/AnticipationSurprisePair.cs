@@ -14,7 +14,7 @@ namespace MotusSystem.FFSM
             NeutralEmotion = new Emotion(e_EmotionsState.RELAX);
             NegativeExtreme = new Emotion(e_EmotionsState.SURPRISE);
 
-            CurrentEmotionalState = e_EmotionsState.PEACEFUL;
+            CurrentEmotionalState = e_EmotionsState.RELAX;
         }
     }
 }

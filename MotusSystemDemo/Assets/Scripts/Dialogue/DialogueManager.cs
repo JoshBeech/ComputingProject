@@ -16,13 +16,20 @@ public class DialogueManager : MonoBehaviour
     [SerializeField]
     private Text m_NPCText;
     [SerializeField]
-    private List<Button> WheelButtons = new List<Button>();
+    private List<Button> WheelButtons1 = new List<Button>();
+    [SerializeField]
+    private List<Button> WheelButtons2 = new List<Button>();
 
     // Use this for initialization
     void Start()
     {
         m_SpeechIndex = 0;
-        foreach(Button l_WheelOption in WheelButtons)
+        foreach(Button l_WheelOption in WheelButtons1)
+        {
+            l_WheelOption.gameObject.SetActive(false);
+        }
+
+        foreach (Button l_WheelOption in WheelButtons2)
         {
             l_WheelOption.gameObject.SetActive(false);
         }
@@ -51,7 +58,9 @@ public class DialogueManager : MonoBehaviour
         Options = new List<string>(l_NPCController.WheelOptions.Count);
         Options.AddRange(l_NPCController.WheelOptions);
 
-        m_NPCName.text = l_NPCController.CharacterName;
+        m_NPCName.text = l_NPCController.CharacterName + "\t\t" + l_NPCController.CurrentEmotions[0] + ":"
+            + l_NPCController.CurrentEmotions[1] + ":" + l_NPCController.CurrentEmotions[2] + ":"
+            + l_NPCController.CurrentEmotions[3];
     }
 
     // Fill in dialogue box/wheel with information
@@ -64,7 +73,7 @@ public class DialogueManager : MonoBehaviour
         foreach (string l_WheelOption in Options)
         {
             string[] l_Breakdown = l_WheelOption.Split(':');
-            Button l_WheelButton = WheelButtons[Int32.Parse(l_Breakdown[0])];
+            Button l_WheelButton = WheelButtons1[Int32.Parse(l_Breakdown[0])];
             l_WheelButton.GetComponentInChildren<Text>().text = l_Breakdown[2];
             // Switch case for how to link the button - could use enum for future?
             int l_WheelAction = 0;
@@ -78,11 +87,11 @@ public class DialogueManager : MonoBehaviour
                     case 2:
                         l_WheelButton.onClick.AddListener(delegate { EndDialogue(); });
                         break;
-                    case 3:
-                        l_WheelButton.onClick.AddListener(delegate { PositiveEmotionTest(p_NPCController); });
-                        break;
                     case 4:
-                        l_WheelButton.onClick.AddListener(delegate { NegativeEmotionTest(p_NPCController); });
+                        l_WheelButton.onClick.AddListener(delegate { p_NPCController.Reaction(MotusSystem.e_EmotionsState.JOY); });
+                        break;
+                    case 5:
+                        l_WheelButton.onClick.AddListener(delegate { p_NPCController.Reaction(MotusSystem.e_EmotionsState.SADNESS); });
                         break;
                 }
             }
@@ -91,6 +100,11 @@ public class DialogueManager : MonoBehaviour
 
         // Show box
         transform.GetChild(0).gameObject.SetActive(true);
+
+    }
+
+    private void ChangeWheelOptionsLayer()
+    {
 
     }
 
@@ -112,7 +126,7 @@ public class DialogueManager : MonoBehaviour
         Options.Clear();
         m_NPCName.text = "";
         m_NPCText.text = "";
-        foreach(Button l_WheelButton in WheelButtons)
+        foreach(Button l_WheelButton in WheelButtons1)
         {
             l_WheelButton.onClick.RemoveAllListeners();
         }
@@ -122,16 +136,4 @@ public class DialogueManager : MonoBehaviour
     }
 
 
-    // TODO: Testing Functions, DELETE before submission
-    private void PositiveEmotionTest(NPCController p_NPCController)
-    {
-        p_NPCController.MotusTest.CreateSensation(MotusSystem.e_EmotionsState.JOY);
-        Debug.Log(p_NPCController.CheckCurrentState());
-    }
-
-    private void NegativeEmotionTest(NPCController p_NPCController)
-    {
-        p_NPCController.MotusTest.CreateSensation(MotusSystem.e_EmotionsState.SADNESS);
-        Debug.Log(p_NPCController.CheckCurrentState());
-    }
 }
