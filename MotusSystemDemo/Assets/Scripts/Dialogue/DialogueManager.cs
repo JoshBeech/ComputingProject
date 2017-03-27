@@ -116,28 +116,52 @@ public class DialogueManager : MonoBehaviour
                         l_WheelButton.onClick.AddListener(delegate { ChangeWheelOptionsLayer(p_NPCController); });
                         break;
                     case 4:
-                        l_WheelButton.onClick.AddListener(delegate { p_NPCController.Reaction(MotusSystem.e_EmotionsState.JOY); });
+                        l_WheelButton.onClick.AddListener(delegate {
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.JOY);
+                            RefreshTitle(p_NPCController);
+                        });
                         break;
                     case 5:
-                        l_WheelButton.onClick.AddListener(delegate { p_NPCController.Reaction(MotusSystem.e_EmotionsState.SADNESS); });
+                        l_WheelButton.onClick.AddListener(delegate {
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.SADNESS);
+                            RefreshTitle(p_NPCController);
+                        });
                         break;
                     case 6:
-                        l_WheelButton.onClick.AddListener(delegate { p_NPCController.Reaction(MotusSystem.e_EmotionsState.ANTICIPATION); });
+                        l_WheelButton.onClick.AddListener(delegate {
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.ANTICIPATION);
+                            RefreshTitle(p_NPCController);
+                        });
                         break;
                     case 7:
-                        l_WheelButton.onClick.AddListener(delegate { p_NPCController.Reaction(MotusSystem.e_EmotionsState.SURPRISE); });
+                        l_WheelButton.onClick.AddListener(delegate {
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.SURPRISE);
+                            RefreshTitle(p_NPCController);
+                        });
                         break;
                     case 8:
-                        l_WheelButton.onClick.AddListener(delegate { p_NPCController.Reaction(MotusSystem.e_EmotionsState.ANGER); });
+                        l_WheelButton.onClick.AddListener(delegate {
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.ANGER);
+                            RefreshTitle(p_NPCController);
+                        });
                         break;
                     case 9:
-                        l_WheelButton.onClick.AddListener(delegate { p_NPCController.Reaction(MotusSystem.e_EmotionsState.FEAR); });
+                        l_WheelButton.onClick.AddListener(delegate {
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.FEAR);
+                            RefreshTitle(p_NPCController);
+                        });
                         break;
                     case 10:
-                        l_WheelButton.onClick.AddListener(delegate { p_NPCController.Reaction(MotusSystem.e_EmotionsState.TRUST); });
+                        l_WheelButton.onClick.AddListener(delegate {
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.TRUST);
+                            RefreshTitle(p_NPCController);
+                        });
                         break;
                     case 11:
-                        l_WheelButton.onClick.AddListener(delegate { p_NPCController.Reaction(MotusSystem.e_EmotionsState.DISGUST); });
+                        l_WheelButton.onClick.AddListener(delegate {
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.DISGUST);
+                            RefreshTitle(p_NPCController);
+                        });
                         break;
                 }
             }
@@ -153,6 +177,13 @@ public class DialogueManager : MonoBehaviour
             m_OptionLayer = 1;
 
         SetupWheelOptions(p_NPCController, m_OptionLayer);
+    }
+
+    private void RefreshTitle(NPCController p_NPCController)
+    {
+        m_NPCName.text = p_NPCController.CharacterName + "\t\t" + p_NPCController.CurrentEmotions[0] + ":"
+            + p_NPCController.CurrentEmotions[1] + ":" + p_NPCController.CurrentEmotions[2] + ":"
+            + p_NPCController.CurrentEmotions[3];
     }
 
     public void ContinueDialogue()
