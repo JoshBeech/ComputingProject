@@ -13,11 +13,14 @@ namespace MotusSystem.Emotions
     {
         public float Strength;
         public e_EmotionsState EmotionID;
+        public Dictionary<float, Action> EmotionActions = new Dictionary<float, Action>();
 
         public Emotion(e_EmotionsState p_EmotionName, float p_StartStrength = 0.0f)
         {
             EmotionID = p_EmotionName;
             Strength = p_StartStrength;
         }
+
+        // add state mnachine
     }
 }

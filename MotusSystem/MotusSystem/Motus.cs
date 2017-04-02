@@ -90,5 +90,10 @@ namespace MotusSystem
                     break;
             }
         }
+
+        public void SetAction(Action p_Action)
+        {
+           //do the thing
+        }
     }
 }

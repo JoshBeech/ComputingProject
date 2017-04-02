@@ -15,6 +15,7 @@ public class NPCController : MonoBehaviour
     void Start()
     {
         MotusTest = new Motus();
+        MotusTest.SetAction(delegate { Update(); });
         UpdateEmotions();
     }
 
