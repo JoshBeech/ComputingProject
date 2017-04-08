@@ -25,6 +25,15 @@ namespace MotusSystem.FFSM
         protected Emotion NeutralEmotion;
         protected Emotion NegativeExtreme;
 
+        public FuzzyFSM(e_EmotionsState p_PositiveExtreme, e_EmotionsState p_NeutralEmotion, e_EmotionsState p_NegativeExtreme)
+        {
+            PositiveExtreme = new Emotion(p_PositiveExtreme);
+            NeutralEmotion = new Emotion(p_NeutralEmotion);
+            NegativeExtreme = new Emotion(p_NeutralEmotion);
+
+            CurrentEmotionalState = p_NeutralEmotion;
+        }
+
         public void ReceiveSensation(Sensation p_Sensation)
         {
             Value += p_Sensation.Strength;

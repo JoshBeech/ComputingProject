@@ -18,10 +18,11 @@ namespace MotusSystem
     };
     public class Motus
     {
-        internal JoySadnessPair JSPair;
-        internal AnticipationSurprisePair ASPair;
-        internal AngerFearPair AFPair;
-        internal TrustDisgustPair TDPair;
+
+        internal FuzzyFSM JoySadnessPair;
+        internal FuzzyFSM AnticipationSurprisePair;
+        internal FuzzyFSM AngerFearPair;
+        internal FuzzyFSM TrustDisgustPair;
 
         // Sprint 2 TODO: Setup emotions, change emotion based on stimuli, act on the emotion
         public Motus()
@@ -31,19 +32,19 @@ namespace MotusSystem
 
         public void CreatePairs()
         {
-            JSPair = new JoySadnessPair();
-            ASPair = new AnticipationSurprisePair();
-            AFPair = new AngerFearPair();
-            TDPair = new TrustDisgustPair();
+            JoySadnessPair = new FuzzyFSM(e_EmotionsState.JOY, e_EmotionsState.CONTENT, e_EmotionsState.SADNESS);
+            AnticipationSurprisePair = new FuzzyFSM(e_EmotionsState.ANTICIPATION, e_EmotionsState.RELAX, e_EmotionsState.SURPRISE);
+            AngerFearPair = new FuzzyFSM(e_EmotionsState.ANGER, e_EmotionsState.CALM, e_EmotionsState.FEAR);
+            TrustDisgustPair = new FuzzyFSM(e_EmotionsState.TRUST, e_EmotionsState.DISTANT, e_EmotionsState.DISGUST);
         }
 
         public string[] GetCurrentEmotionStates()
         {
             string[] l_EmotionStates = new string[4];
-            l_EmotionStates[0] = JSPair.CurrentEmotionalState.ToString();
-            l_EmotionStates[1] = ASPair.CurrentEmotionalState.ToString();
-            l_EmotionStates[2] = AFPair.CurrentEmotionalState.ToString();
-            l_EmotionStates[3] = TDPair.CurrentEmotionalState.ToString();
+            l_EmotionStates[0] = JoySadnessPair.CurrentEmotionalState.ToString();
+            l_EmotionStates[1] = AnticipationSurprisePair.CurrentEmotionalState.ToString();
+            l_EmotionStates[2] = AngerFearPair.CurrentEmotionalState.ToString();
+            l_EmotionStates[3] = TrustDisgustPair.CurrentEmotionalState.ToString();
 
             return l_EmotionStates;
 
@@ -56,35 +57,35 @@ namespace MotusSystem
             {
                 case e_EmotionsState.JOY:
                     l_NewSensation = new Sensation(0.3f);
-                    JSPair.ReceiveSensation(l_NewSensation);
+                    JoySadnessPair.ReceiveSensation(l_NewSensation);
                     break;
                 case e_EmotionsState.SADNESS:
                     l_NewSensation = new Sensation(-0.3f);
-                    JSPair.ReceiveSensation(l_NewSensation);
+                    JoySadnessPair.ReceiveSensation(l_NewSensation);
                     break;
                 case e_EmotionsState.ANTICIPATION:
                     l_NewSensation = new Sensation(0.3f);
-                    ASPair.ReceiveSensation(l_NewSensation);
+                    AnticipationSurprisePair.ReceiveSensation(l_NewSensation);
                     break;
                 case e_EmotionsState.SURPRISE:
                     l_NewSensation = new Sensation(-0.3f);
-                    ASPair.ReceiveSensation(l_NewSensation);
+                    AnticipationSurprisePair.ReceiveSensation(l_NewSensation);
                     break;
                 case e_EmotionsState.ANGER:
                     l_NewSensation = new Sensation(0.3f);
-                    AFPair.ReceiveSensation(l_NewSensation);
+                    AngerFearPair.ReceiveSensation(l_NewSensation);
                     break;
                 case e_EmotionsState.FEAR:
                     l_NewSensation = new Sensation(-0.3f);
-                    AFPair.ReceiveSensation(l_NewSensation);
+                    AngerFearPair.ReceiveSensation(l_NewSensation);
                     break;
                 case e_EmotionsState.TRUST:
                     l_NewSensation = new Sensation(0.3f);
-                    TDPair.ReceiveSensation(l_NewSensation);
+                    TrustDisgustPair.ReceiveSensation(l_NewSensation);
                     break;
                 case e_EmotionsState.DISGUST:
                     l_NewSensation = new Sensation(-0.3f);
-                    TDPair.ReceiveSensation(l_NewSensation);
+                    TrustDisgustPair.ReceiveSensation(l_NewSensation);
                     break;
                 default:
                     break;
