@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MotusSystem.FFSM;
 
 namespace MotusSystem
 {
@@ -10,6 +11,7 @@ namespace MotusSystem
     /// </summary>
     internal class MoodController
     {
+        internal Mood CurrentMood = new Mood();
         private Dictionary<e_EmotionsState, Mood> m_Moods = new Dictionary<e_EmotionsState, Mood>(); 
 
         public MoodController()
@@ -24,22 +26,29 @@ namespace MotusSystem
             m_Moods.Add(e_EmotionsState.DISGUST, new Mood());
         }
 
-        public void GetCurrentMood()
+        public e_EmotionsState GetCurrentMood()
         {
-            // new enum?
+            return CurrentMood.MoodID;
         }
 
         // Takes/gathers input from all FFSMs - better name?
-        public void Update()
+        public void UpdateCurrentMood(List<FuzzyFSM> p_FuzzyEmotions)
         {
-
+            // Compare the values of all FFSM
+            FuzzyFSM l_StrongestEmotion = new FuzzyFSM();
+            float l_StrongestEmotionValue = 0.0f;
+            foreach(FuzzyFSM l_FuzzyEmotion in p_FuzzyEmotions)
+            {
+                if(l_FuzzyEmotion.GetCurrentEmotionStrength() > l_StrongestEmotionValue)
+                {
+                    l_StrongestEmotion = l_FuzzyEmotion;
+                    l_StrongestEmotionValue = l_FuzzyEmotion.GetCurrentEmotionStrength();
+                }
+            }
+            // Set highest vaule to mood
+            CurrentMood = m_Moods[l_StrongestEmotion.CurrentEmotionalState];
+            p_FuzzyEmotions.Remove(l_StrongestEmotion);
+            // Alter mood based off 2nd highest vaule depending on vaules
         }
-
-        private void ChangeMood()
-        {
-
-        }
-
-
     }
 }

@@ -10,10 +10,15 @@ namespace MotusSystem
     /// </summary>
     internal class Mood
     {
-
+        internal e_EmotionsState MoodID;
         public Mood()
         {
 
+        }
+
+        public Mood(e_EmotionsState p_ID)
+        {
+            MoodID = p_ID;
         }
     }
 }

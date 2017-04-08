@@ -21,9 +21,14 @@ namespace MotusSystem.FFSM
         public e_EmotionsState CurrentEmotionalState;
         public e_State CurrentState = e_State.NEUTRAL;
 
-        protected Emotion PositiveExtreme;
-        protected Emotion NeutralEmotion;
-        protected Emotion NegativeExtreme;
+        internal Emotion PositiveExtreme;
+        internal Emotion NeutralEmotion;
+        internal Emotion NegativeExtreme;
+
+        public FuzzyFSM()
+        {
+
+        }
 
         public FuzzyFSM(e_EmotionsState p_PositiveExtreme, e_EmotionsState p_NeutralEmotion, e_EmotionsState p_NegativeExtreme)
         {
