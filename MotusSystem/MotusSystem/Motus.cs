@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MotusSystem.FFSM;
+using MotusSystem.Moods;
 
 namespace MotusSystem
 {
@@ -16,6 +17,7 @@ namespace MotusSystem
         ANGER, CALM, FEAR,
         TRUST, DISTANT, DISGUST
     };
+
     public class Motus
     {
 
@@ -24,10 +26,12 @@ namespace MotusSystem
         internal FuzzyFSM AngerFearPair;
         internal FuzzyFSM TrustDisgustPair;
 
-        // Sprint 2 TODO: Setup emotions, change emotion based on stimuli, act on the emotion
+        internal MoodController MoodManager;
+
         public Motus()
         {
             CreatePairs();
+            MoodManager = new MoodController();
         }
 
         public void CreatePairs()
@@ -36,6 +40,17 @@ namespace MotusSystem
             AnticipationSurprisePair = new FuzzyFSM(e_EmotionsState.ANTICIPATION, e_EmotionsState.RELAX, e_EmotionsState.SURPRISE);
             AngerFearPair = new FuzzyFSM(e_EmotionsState.ANGER, e_EmotionsState.CALM, e_EmotionsState.FEAR);
             TrustDisgustPair = new FuzzyFSM(e_EmotionsState.TRUST, e_EmotionsState.DISTANT, e_EmotionsState.DISGUST);
+        }
+
+
+        public string[] GetCurrentMood()
+        {
+            string[] l_Mood = new string[3];
+            l_Mood[0] = MoodManager.CurrentMood.MoodID.ToString();
+            l_Mood[1] = MoodManager.CurrentMood.SecondaryEmotion.ToString();
+            l_Mood[2] = MoodManager.CurrentMood.CurrentState.StateID.ToString();
+
+            return l_Mood;
         }
 
         public string[] GetCurrentEmotionStates()
@@ -50,51 +65,88 @@ namespace MotusSystem
 
         }
 
-        public void CreateSensation(e_EmotionsState p_EmotionTarget)
+        public void CreateSensation(e_EmotionsState p_EmotionTarget, float p_Strength)
         {
-            Sensation l_NewSensation;
+            Sensation l_NewSensation =  new Sensation(p_Strength);
             switch(p_EmotionTarget)
             {
                 case e_EmotionsState.JOY:
-                    l_NewSensation = new Sensation(0.3f);
                     JoySadnessPair.ReceiveSensation(l_NewSensation);
                     break;
                 case e_EmotionsState.SADNESS:
-                    l_NewSensation = new Sensation(-0.3f);
                     JoySadnessPair.ReceiveSensation(l_NewSensation);
                     break;
                 case e_EmotionsState.ANTICIPATION:
-                    l_NewSensation = new Sensation(0.3f);
                     AnticipationSurprisePair.ReceiveSensation(l_NewSensation);
                     break;
                 case e_EmotionsState.SURPRISE:
-                    l_NewSensation = new Sensation(-0.3f);
                     AnticipationSurprisePair.ReceiveSensation(l_NewSensation);
                     break;
                 case e_EmotionsState.ANGER:
-                    l_NewSensation = new Sensation(0.3f);
                     AngerFearPair.ReceiveSensation(l_NewSensation);
                     break;
                 case e_EmotionsState.FEAR:
-                    l_NewSensation = new Sensation(-0.3f);
                     AngerFearPair.ReceiveSensation(l_NewSensation);
                     break;
                 case e_EmotionsState.TRUST:
-                    l_NewSensation = new Sensation(0.3f);
                     TrustDisgustPair.ReceiveSensation(l_NewSensation);
                     break;
                 case e_EmotionsState.DISGUST:
-                    l_NewSensation = new Sensation(-0.3f);
                     TrustDisgustPair.ReceiveSensation(l_NewSensation);
                     break;
                 default:
                     break;
             }
+
+            MoodManager.UpdateCurrentMood(new List<FuzzyFSM> { JoySadnessPair, AnticipationSurprisePair, AngerFearPair, TrustDisgustPair });
+        }
+
+        public void SetMood(e_EmotionsState p_MoodEmotion)
+        {
+            switch (p_MoodEmotion)
+            {
+                case e_EmotionsState.JOY:
+                    JoySadnessPair.Value = 1.0f;
+                    JoySadnessPair.SetState();
+                    break;
+                case e_EmotionsState.SADNESS:
+                    JoySadnessPair.Value = -1.0f;
+                    JoySadnessPair.SetState();
+                    break;
+                case e_EmotionsState.ANTICIPATION:
+                    AnticipationSurprisePair.Value = 1.0f;
+                    AnticipationSurprisePair.SetState();
+                    break;
+                case e_EmotionsState.SURPRISE:
+                    AnticipationSurprisePair.Value = -1.0f;
+                    AnticipationSurprisePair.SetState();
+                    break;
+                case e_EmotionsState.ANGER:
+                    AngerFearPair.Value = 1.0f;
+                    AngerFearPair.SetState();
+                    break;
+                case e_EmotionsState.FEAR:
+                    AngerFearPair.Value = -1.0f;
+                    AngerFearPair.SetState();
+                    break;
+                case e_EmotionsState.TRUST:
+                    TrustDisgustPair.Value = 1.0f;
+                    TrustDisgustPair.SetState();
+                    break;
+                case e_EmotionsState.DISGUST:
+                    TrustDisgustPair.Value = -1.0f;
+                    TrustDisgustPair.SetState();
+                    break;
+                default:
+                    break;
+            }
+
+            MoodManager.UpdateCurrentMood(new List<FuzzyFSM> { JoySadnessPair, AnticipationSurprisePair, AngerFearPair, TrustDisgustPair });
         }
 
         public void SetAction(Action p_Action)
         {
-           //do the thing
+            //do the thing
         }
     }
 }

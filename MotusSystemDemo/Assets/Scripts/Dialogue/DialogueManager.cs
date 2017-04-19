@@ -60,9 +60,11 @@ public class DialogueManager : MonoBehaviour
             Options2.AddRange(l_NPCController.WheelOptions2);
         }
 
-        m_NPCName.text = l_NPCController.CharacterName + "\t\t" + l_NPCController.CurrentEmotions[0] + ":"
-            + l_NPCController.CurrentEmotions[1] + ":" + l_NPCController.CurrentEmotions[2] + ":"
-            + l_NPCController.CurrentEmotions[3];
+        //m_NPCName.text = l_NPCController.CharacterName + "\t\t" + l_NPCController.CurrentEmotions[0] + ":"
+        //    + l_NPCController.CurrentEmotions[1] + ":" + l_NPCController.CurrentEmotions[2] + ":"
+        //    + l_NPCController.CurrentEmotions[3];
+
+        RefreshTitle(l_NPCController);
     }
 
     // Fill in dialogue box/wheel with information
@@ -117,49 +119,49 @@ public class DialogueManager : MonoBehaviour
                         break;
                     case 4:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.JOY);
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.JOY, 3.0f);
                             RefreshTitle(p_NPCController);
                         });
                         break;
                     case 5:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.SADNESS);
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.SADNESS, -3.0f);
                             RefreshTitle(p_NPCController);
                         });
                         break;
                     case 6:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.ANTICIPATION);
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.ANTICIPATION, 3.0f);
                             RefreshTitle(p_NPCController);
                         });
                         break;
                     case 7:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.SURPRISE);
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.SURPRISE, -3.0f);
                             RefreshTitle(p_NPCController);
                         });
                         break;
                     case 8:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.ANGER);
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.ANGER, 3.0f);
                             RefreshTitle(p_NPCController);
                         });
                         break;
                     case 9:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.FEAR);
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.FEAR, -3.0f);
                             RefreshTitle(p_NPCController);
                         });
                         break;
                     case 10:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.TRUST);
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.TRUST, 3.0f);
                             RefreshTitle(p_NPCController);
                         });
                         break;
                     case 11:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.DISGUST);
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.DISGUST, -3.0f);
                             RefreshTitle(p_NPCController);
                         });
                         break;
@@ -181,9 +183,12 @@ public class DialogueManager : MonoBehaviour
 
     private void RefreshTitle(NPCController p_NPCController)
     {
-        m_NPCName.text = p_NPCController.CharacterName + "\t\t" + p_NPCController.CurrentEmotions[0] + ":"
-            + p_NPCController.CurrentEmotions[1] + ":" + p_NPCController.CurrentEmotions[2] + ":"
-            + p_NPCController.CurrentEmotions[3];
+        //m_NPCName.text = p_NPCController.CharacterName + "\t\t" + p_NPCController.CurrentEmotions[0] + ":"
+        //    + p_NPCController.CurrentEmotions[1] + ":" + p_NPCController.CurrentEmotions[2] + ":"
+        //    + p_NPCController.CurrentEmotions[3];
+
+        m_NPCName.text = String.Format("{0}\t\t {1}:{2}:{3}", p_NPCController.CharacterName,
+            p_NPCController.CurrentMood[0], p_NPCController.CurrentMood[1], p_NPCController.CurrentMood[2]);
     }
 
     public void ContinueDialogue()

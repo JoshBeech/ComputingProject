@@ -15,8 +15,8 @@ namespace MotusSystem.FFSM
         internal enum e_State { NEGATIVE = -1, NEUTRAL = 0, POSITIVE };
 
         public float Value = 0;
-        protected float PositiveBoundary = 0.5f;
-        protected float NegativeBoundary = -0.5f;
+        internal float PositiveBoundary = 0.5f;
+        internal float NegativeBoundary = -0.5f;
 
         public e_EmotionsState CurrentEmotionalState;
         public e_State CurrentState = e_State.NEUTRAL;
@@ -34,9 +34,22 @@ namespace MotusSystem.FFSM
         {
             PositiveExtreme = new Emotion(p_PositiveExtreme);
             NeutralEmotion = new Emotion(p_NeutralEmotion);
-            NegativeExtreme = new Emotion(p_NeutralEmotion);
+            NegativeExtreme = new Emotion(p_NegativeExtreme);
 
             CurrentEmotionalState = p_NeutralEmotion;
+        }
+
+        public float GetCurrentEmotionStrength()
+        {
+            switch (CurrentState)
+            {
+                case e_State.POSITIVE:
+                    return PositiveExtreme.Strength;
+                case e_State.NEGATIVE:
+                    return NegativeExtreme.Strength;
+                default:
+                    return NeutralEmotion.Strength;
+            }
         }
 
         public void ReceiveSensation(Sensation p_Sensation)
@@ -68,21 +81,9 @@ namespace MotusSystem.FFSM
                 CurrentEmotionalState = NeutralEmotion.EmotionID;
                 float l_NeutralBoundaryDifference = PositiveBoundary - NegativeBoundary;
                 NeutralEmotion.Strength = (l_NeutralBoundaryDifference - (Math.Abs(Value)*2) )/ l_NeutralBoundaryDifference;
-
             }
         }
 
-        public float GetCurrentEmotionStrength()
-        {
-            switch(CurrentState)
-            {
-                case e_State.POSITIVE:
-                    return PositiveExtreme.Strength;
-                case e_State.NEGATIVE:
-                    return NegativeExtreme.Strength;
-                default:
-                    return NeutralEmotion.Strength;                    
-            }
-        }
+
     }
 }
