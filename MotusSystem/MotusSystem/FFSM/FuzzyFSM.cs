@@ -73,7 +73,7 @@ namespace MotusSystem.FFSM
                 CurrentState = e_State.NEGATIVE;
                 CurrentEmotionalState = NegativeExtreme.EmotionID;
                 float l_NegativeBoundaryDifference = 1.0f + NegativeBoundary;
-                NegativeExtreme.Strength = (Value - NegativeBoundary) / l_NegativeBoundaryDifference;
+                NegativeExtreme.Strength = Math.Abs((Value - NegativeBoundary) / l_NegativeBoundaryDifference);
             }
             else
             {

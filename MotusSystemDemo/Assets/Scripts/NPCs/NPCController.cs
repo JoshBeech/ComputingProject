@@ -9,6 +9,7 @@ public class NPCController : MonoBehaviour
     public List<string> WheelOptions1 = new List<string>();
     public List<string> WheelOptions2 = new List<string>();
     public string[] CurrentEmotions;
+    public float[] CurrentEmotionValues;
     public string[] CurrentMood;
 
     public Motus MotusTest;
@@ -30,7 +31,8 @@ public class NPCController : MonoBehaviour
 
     public void UpdateEmotions()
     {
-        CurrentEmotions = MotusTest.GetCurrentEmotionStates();        
+        CurrentEmotions = MotusTest.GetCurrentEmotionStates();
+        CurrentEmotionValues = MotusTest.GetCurrentEmotionValues();     
     }
 
     public void UpdateMood()

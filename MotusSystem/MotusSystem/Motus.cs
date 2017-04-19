@@ -20,6 +20,7 @@ namespace MotusSystem
 
     public class Motus
     {
+        internal List<FuzzyFSM> FuzzyEmotions = new List<FuzzyFSM>();
 
         internal FuzzyFSM JoySadnessPair;
         internal FuzzyFSM AnticipationSurprisePair;
@@ -40,6 +41,11 @@ namespace MotusSystem
             AnticipationSurprisePair = new FuzzyFSM(e_EmotionsState.ANTICIPATION, e_EmotionsState.RELAX, e_EmotionsState.SURPRISE);
             AngerFearPair = new FuzzyFSM(e_EmotionsState.ANGER, e_EmotionsState.CALM, e_EmotionsState.FEAR);
             TrustDisgustPair = new FuzzyFSM(e_EmotionsState.TRUST, e_EmotionsState.DISTANT, e_EmotionsState.DISGUST);
+
+            FuzzyEmotions.Add(JoySadnessPair);
+            FuzzyEmotions.Add(AnticipationSurprisePair);
+            FuzzyEmotions.Add(AngerFearPair);
+            FuzzyEmotions.Add(TrustDisgustPair);
         }
 
 
@@ -65,6 +71,17 @@ namespace MotusSystem
 
         }
 
+        public float[] GetCurrentEmotionValues()
+        {
+            float[] l_EmotionValues = new float[4];
+            l_EmotionValues[0] = JoySadnessPair.GetCurrentEmotionStrength();
+            l_EmotionValues[1] = AnticipationSurprisePair.GetCurrentEmotionStrength();
+            l_EmotionValues[2] = AngerFearPair.GetCurrentEmotionStrength();
+            l_EmotionValues[3] = TrustDisgustPair.GetCurrentEmotionStrength();
+
+            return l_EmotionValues;
+        }
+
         public void CreateSensation(e_EmotionsState p_EmotionTarget, float p_Strength)
         {
             Sensation l_NewSensation =  new Sensation(p_Strength);
@@ -72,34 +89,67 @@ namespace MotusSystem
             {
                 case e_EmotionsState.JOY:
                     JoySadnessPair.ReceiveSensation(l_NewSensation);
+                    DeteriorateEmotions(JoySadnessPair);
                     break;
                 case e_EmotionsState.SADNESS:
                     JoySadnessPair.ReceiveSensation(l_NewSensation);
+                    DeteriorateEmotions(JoySadnessPair);
                     break;
                 case e_EmotionsState.ANTICIPATION:
                     AnticipationSurprisePair.ReceiveSensation(l_NewSensation);
+                    DeteriorateEmotions(AnticipationSurprisePair);
                     break;
                 case e_EmotionsState.SURPRISE:
                     AnticipationSurprisePair.ReceiveSensation(l_NewSensation);
+                    DeteriorateEmotions(AnticipationSurprisePair);
                     break;
                 case e_EmotionsState.ANGER:
                     AngerFearPair.ReceiveSensation(l_NewSensation);
+                    DeteriorateEmotions(AngerFearPair);
                     break;
                 case e_EmotionsState.FEAR:
                     AngerFearPair.ReceiveSensation(l_NewSensation);
+                    DeteriorateEmotions(AngerFearPair);
                     break;
                 case e_EmotionsState.TRUST:
                     TrustDisgustPair.ReceiveSensation(l_NewSensation);
+                    DeteriorateEmotions(AngerFearPair);
                     break;
                 case e_EmotionsState.DISGUST:
                     TrustDisgustPair.ReceiveSensation(l_NewSensation);
+                    DeteriorateEmotions(TrustDisgustPair);
                     break;
                 default:
+                    DeteriorateEmotions(TrustDisgustPair);
                     break;
             }
 
-            MoodManager.UpdateCurrentMood(new List<FuzzyFSM> { JoySadnessPair, AnticipationSurprisePair, AngerFearPair, TrustDisgustPair });
+            MoodManager.UpdateCurrentMood(FuzzyEmotions);
         }
+
+        /// <summary>
+        /// Adjust emotion values slightly, 
+        /// used after receiving a sensation to highlight changes 
+        /// </summary>
+        /// <param name="p_Emotions"></param>
+        private void DeteriorateEmotions(FuzzyFSM p_AlteredEmotion)
+        {
+            foreach(FuzzyFSM l_Emotion in FuzzyEmotions)
+            {
+                if (l_Emotion != p_AlteredEmotion)
+                {
+                    if (l_Emotion.Value > 0)
+                    {
+                        l_Emotion.Value -= 0.01f;
+                    }
+                    else if (l_Emotion.Value < 0)
+                    {
+                        l_Emotion.Value += 0.01f;
+                    }
+                }
+            }
+        }
+
 
         public void SetMood(e_EmotionsState p_MoodEmotion)
         {
