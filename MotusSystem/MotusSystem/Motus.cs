@@ -15,7 +15,8 @@ namespace MotusSystem
         JOY = 0, CONTENT, SADNESS,
         ANTICIPATION, RELAX, SURPRISE,
         ANGER, CALM, FEAR,
-        TRUST, DISTANT, DISGUST
+        TRUST, DISTANT, DISGUST,
+        NEUTRAL
     };
 
     public class Motus
@@ -35,7 +36,7 @@ namespace MotusSystem
             MoodManager = new MoodController();
         }
 
-        public void CreatePairs()
+        private void CreatePairs()
         {
             JoySadnessPair = new FuzzyFSM(e_EmotionsState.JOY, e_EmotionsState.CONTENT, e_EmotionsState.SADNESS);
             AnticipationSurprisePair = new FuzzyFSM(e_EmotionsState.ANTICIPATION, e_EmotionsState.RELAX, e_EmotionsState.SURPRISE);
@@ -52,9 +53,9 @@ namespace MotusSystem
         public string[] GetCurrentMood()
         {
             string[] l_Mood = new string[3];
-            l_Mood[0] = MoodManager.CurrentMood.MoodID.ToString();
-            l_Mood[1] = MoodManager.CurrentMood.SecondaryEmotion.ToString();
-            l_Mood[2] = MoodManager.CurrentMood.CurrentState.StateID.ToString();
+            l_Mood[0] = MoodManager.GetCurrentMood().MoodID.ToString();
+            l_Mood[1] = MoodManager.GetCurrentMood().SecondaryEmotion.ToString();
+            l_Mood[2] = MoodManager.GetCurrentMood().CurrentState.StateID.ToString();
 
             return l_Mood;
         }
@@ -120,7 +121,7 @@ namespace MotusSystem
                     DeteriorateEmotions(TrustDisgustPair);
                     break;
                 default:
-                    DeteriorateEmotions(TrustDisgustPair);
+                    DeteriorateEmotions();
                     break;
             }
 
@@ -132,7 +133,7 @@ namespace MotusSystem
         /// used after receiving a sensation to highlight changes 
         /// </summary>
         /// <param name="p_Emotions"></param>
-        private void DeteriorateEmotions(FuzzyFSM p_AlteredEmotion)
+        private void DeteriorateEmotions(FuzzyFSM p_AlteredEmotion = null)
         {
             foreach(FuzzyFSM l_Emotion in FuzzyEmotions)
             {
@@ -140,12 +141,14 @@ namespace MotusSystem
                 {
                     if (l_Emotion.Value > 0)
                     {
-                        l_Emotion.Value -= 0.01f;
+                        l_Emotion.Value -= 0.05f;
                     }
                     else if (l_Emotion.Value < 0)
                     {
-                        l_Emotion.Value += 0.01f;
+                        l_Emotion.Value += 0.05f;
                     }
+                    l_Emotion.Value = Utilities.MathUtilities.Clamp(l_Emotion.Value, 1.0f, -1.0f); 
+                    l_Emotion.SetState();
                 }
             }
         }

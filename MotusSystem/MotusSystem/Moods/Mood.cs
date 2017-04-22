@@ -22,22 +22,32 @@ namespace MotusSystem.Moods
         /// Otherwise state will be whatever the mood is
         /// </summary>
         /// <param name="p_RemainingEmotions"></param>
-        public void BlendMood(List<FuzzyFSM> p_RemainingEmotions)
+        public void BlendMood(List<FuzzyFSM> p_RemainingEmotions, int p_NumberOfNeutralEmotion)
         {
-            float l_MoodDifference = 1.0f;
-            foreach (FuzzyFSM l_FuzzyEmotion in p_RemainingEmotions)
+            if (p_NumberOfNeutralEmotion == 3)
             {
-                if (l_FuzzyEmotion.CurrentState != FuzzyFSM.e_State.NEUTRAL)
+                SecondaryEmotion = MoodID;
+                MoodStrength = p_RemainingEmotions[0].GetCurrentEmotionStrength();
+            }
+            else
+            {
+                float l_MoodDifference = 1.0f;
+                foreach (FuzzyFSM l_FuzzyEmotion in p_RemainingEmotions)
                 {
-                    float l_NewMoodDifference = MoodStrength - l_FuzzyEmotion.GetCurrentEmotionStrength();
-
-                    if (l_NewMoodDifference < 0.5f && l_NewMoodDifference < l_MoodDifference)
+                    if (l_FuzzyEmotion.CurrentState != FuzzyFSM.e_State.NEUTRAL || l_FuzzyEmotion.CurrentEmotionalState == MoodID)
                     {
-                        SecondaryEmotion = l_FuzzyEmotion.CurrentEmotionalState;
-                        l_MoodDifference = l_NewMoodDifference;
-                        MoodStrength = l_FuzzyEmotion.GetCurrentEmotionStrength();
+                        float l_NewMoodDifference = MoodStrength - l_FuzzyEmotion.GetCurrentEmotionStrength();
+
+                        if (l_NewMoodDifference < 0.5f && l_NewMoodDifference < l_MoodDifference)
+                        {
+                            SecondaryEmotion = l_FuzzyEmotion.CurrentEmotionalState;
+                            l_MoodDifference = l_NewMoodDifference;
+                            MoodStrength = l_FuzzyEmotion.GetCurrentEmotionStrength();
+                        }
                     }
                 }
+
+                // Repeat above if for primary emotion so it is compared after the loop
             }
 
             SetBlendedMood();

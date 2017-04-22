@@ -119,49 +119,49 @@ public class DialogueManager : MonoBehaviour
                         break;
                     case 4:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.JOY, 3.0f);
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.JOY, 0.3f);
                             RefreshTitle(p_NPCController);
                         });
                         break;
                     case 5:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.SADNESS, -3.0f);
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.SADNESS, -0.3f);
                             RefreshTitle(p_NPCController);
                         });
                         break;
                     case 6:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.ANTICIPATION, 3.0f);
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.ANTICIPATION, 0.3f);
                             RefreshTitle(p_NPCController);
                         });
                         break;
                     case 7:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.SURPRISE, -3.0f);
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.SURPRISE, -0.3f);
                             RefreshTitle(p_NPCController);
                         });
                         break;
                     case 8:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.ANGER, 3.0f);
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.ANGER, 0.3f);
                             RefreshTitle(p_NPCController);
                         });
                         break;
                     case 9:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.FEAR, -3.0f);
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.FEAR, -0.3f);
                             RefreshTitle(p_NPCController);
                         });
                         break;
                     case 10:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.TRUST, 3.0f);
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.TRUST, 0.3f);
                             RefreshTitle(p_NPCController);
                         });
                         break;
                     case 11:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.DISGUST, -3.0f);
+                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.DISGUST, -0.3f);
                             RefreshTitle(p_NPCController);
                         });
                         break;

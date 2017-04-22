@@ -50,6 +50,7 @@
     <Compile Include="Moods\Joy.cs" />
     <Compile Include="Moods\Mood.cs" />
     <Compile Include="Moods\MoodController.cs" />
+    <Compile Include="Moods\Neutral.cs" />
     <Compile Include="Moods\Sadness.cs" />
     <Compile Include="Moods\State.cs" />
     <Compile Include="Moods\Surprise.cs" />

@@ -11,7 +11,7 @@ namespace MotusSystem.Moods
     /// </summary>
     internal class MoodController
     {
-        internal Mood CurrentMood = new Mood();
+        private Mood CurrentMood = new Mood();
         private Dictionary<e_EmotionsState, Mood> m_Moods = new Dictionary<e_EmotionsState, Mood>(); 
 
         public MoodController()
@@ -24,11 +24,14 @@ namespace MotusSystem.Moods
             m_Moods.Add(e_EmotionsState.SURPRISE, new Surprise());
             m_Moods.Add(e_EmotionsState.FEAR, new Fear());
             m_Moods.Add(e_EmotionsState.DISGUST, new Disgust());
+            m_Moods.Add(e_EmotionsState.NEUTRAL, new Neutral());
+
+            CurrentMood = m_Moods[e_EmotionsState.NEUTRAL];
         }
 
-        public e_EmotionsState GetCurrentMood()
+        public Mood GetCurrentMood()
         {
-            return CurrentMood.MoodID;
+            return CurrentMood;
         }
 
         // Takes/gathers input from all FFSMs - better name?
@@ -37,7 +40,10 @@ namespace MotusSystem.Moods
             // Compare the values of all FFSM - turn into lambda and pass to mood to reuse
             FuzzyFSM l_StrongestEmotion = new FuzzyFSM();
             float l_StrongestEmotionValue = 0.0f;
-            foreach(FuzzyFSM l_FuzzyEmotion in p_FuzzyEmotions)
+
+            // Create a copy of the list to be able to remove unwanted (neutral) emotions
+            int l_NeutralEmotionCount = 0;
+            foreach (FuzzyFSM l_FuzzyEmotion in p_FuzzyEmotions)
             {
                 if (l_FuzzyEmotion.CurrentState != FuzzyFSM.e_State.NEUTRAL)
                 {
@@ -47,12 +53,26 @@ namespace MotusSystem.Moods
                         l_StrongestEmotionValue = l_FuzzyEmotion.GetCurrentEmotionStrength();
                     }
                 }
+                else
+                {
+                    l_NeutralEmotionCount++;
+                }
             }
             // Set highest vaule to mood
-            CurrentMood = m_Moods[l_StrongestEmotion.CurrentEmotionalState];
-            p_FuzzyEmotions.Remove(l_StrongestEmotion);
-            // Alter mood based off 2nd highest vaule depending on vaules
-            CurrentMood.BlendMood(p_FuzzyEmotions);
+
+            if(l_NeutralEmotionCount == 4)
+            {
+                // Set to neutral
+                CurrentMood = m_Moods[e_EmotionsState.NEUTRAL];
+            }
+            else
+            {
+                CurrentMood = m_Moods[l_StrongestEmotion.CurrentEmotionalState];
+                //p_FuzzyEmotions.Remove(l_StrongestEmotion);
+                // Alter mood based off 2nd highest vaule depending on vaules
+                CurrentMood.BlendMood(p_FuzzyEmotions, l_NeutralEmotionCount);
+            }
+
         }
     }
 }
