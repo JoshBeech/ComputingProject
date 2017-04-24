@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,8 @@ namespace MotusSystem.Moods
     internal class MoodController
     {
         private Mood CurrentMood = new Mood();
-        private Dictionary<e_EmotionsState, Mood> m_Moods = new Dictionary<e_EmotionsState, Mood>(); 
+        private Dictionary<e_EmotionsState, Mood> m_Moods = new Dictionary<e_EmotionsState, Mood>();
+        internal List<FuzzyFSM> SortedEmotions = new List<FuzzyFSM>();
 
         public MoodController()
         {
@@ -37,40 +39,46 @@ namespace MotusSystem.Moods
         // Takes/gathers input from all FFSMs - better name?
         public void UpdateCurrentMood(List<FuzzyFSM> p_FuzzyEmotions)
         {
-            // Compare the values of all FFSM - turn into lambda and pass to mood to reuse
-            FuzzyFSM l_StrongestEmotion = new FuzzyFSM();
-            float l_StrongestEmotionValue = 0.0f;
+            // Compare the values of all FFSM - turn into lambda and pass to mood to reuse?
+            //FuzzyFSM l_StrongestEmotion = new FuzzyFSM();
+            //float l_StrongestEmotionValue = 0.0f;            
+            //int l_NeutralEmotionCount = 0;
 
-            // Create a copy of the list to be able to remove unwanted (neutral) emotions
-            int l_NeutralEmotionCount = 0;
+            // Check all emotions that aren't neutral and compare which has the strongest value
+            // and set the current mood to be the strongest emotion
+
+            SortedEmotions.Clear();
+
             foreach (FuzzyFSM l_FuzzyEmotion in p_FuzzyEmotions)
             {
                 if (l_FuzzyEmotion.CurrentState != FuzzyFSM.e_State.NEUTRAL)
                 {
-                    if (l_FuzzyEmotion.GetCurrentEmotionStrength() > l_StrongestEmotionValue)
-                    {
-                        l_StrongestEmotion = l_FuzzyEmotion;
-                        l_StrongestEmotionValue = l_FuzzyEmotion.GetCurrentEmotionStrength();
-                    }
-                }
-                else
-                {
-                    l_NeutralEmotionCount++;
+
+                    SortedEmotions.Add(l_FuzzyEmotion);
+                    //if (l_FuzzyEmotion.GetCurrentEmotionStrength() > l_StrongestEmotionValue)
+                    //{
+                    //    l_StrongestEmotion = l_FuzzyEmotion;
+                    //    l_StrongestEmotionValue = l_FuzzyEmotion.GetCurrentEmotionStrength();
+                    //}
                 }
             }
             // Set highest vaule to mood
 
-            if(l_NeutralEmotionCount == 4)
+            
+
+            if(SortedEmotions.Count == 0)
             {
                 // Set to neutral
                 CurrentMood = m_Moods[e_EmotionsState.NEUTRAL];
+                CurrentMood.MoodStrength = 1.0f;
             }
-            else
+            else 
             {
-                CurrentMood = m_Moods[l_StrongestEmotion.CurrentEmotionalState];
-                //p_FuzzyEmotions.Remove(l_StrongestEmotion);
+                SortedEmotions.Sort((x, y) => y.GetCurrentEmotionStrength().CompareTo(x.GetCurrentEmotionStrength()));
+                CurrentMood = m_Moods[SortedEmotions[0].CurrentEmotionalState];
+                CurrentMood.MoodStrength =SortedEmotions[0].GetCurrentEmotionStrength();
                 // Alter mood based off 2nd highest vaule depending on vaules
-                CurrentMood.BlendMood(p_FuzzyEmotions, l_NeutralEmotionCount);
+                CurrentMood.BlendMood(SortedEmotions);
             }
 
         }

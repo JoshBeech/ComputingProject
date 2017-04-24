@@ -12,7 +12,7 @@ namespace MotusSystem.Moods
         public Neutral()
         {
             MoodID = e_EmotionsState.NEUTRAL;
-            SecondaryEmotion = e_EmotionsState.NEUTRAL;
+            SecondaryMoodID = e_EmotionsState.NEUTRAL;
             CurrentState = m_Neutral;
         }
 

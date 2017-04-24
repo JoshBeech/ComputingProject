@@ -18,7 +18,7 @@ namespace MotusSystem.Moods
 
         protected override void SetBlendedMood()
         {
-            switch(SecondaryEmotion)
+            switch(SecondaryMoodID)
             {
                 case e_EmotionsState.ANTICIPATION:
                     CurrentState = Fatalistic;

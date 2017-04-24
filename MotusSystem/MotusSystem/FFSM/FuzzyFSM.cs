@@ -15,8 +15,8 @@ namespace MotusSystem.FFSM
         internal enum e_State { NEGATIVE = -1, NEUTRAL = 0, POSITIVE };
 
         public float Value = 0;
-        internal float PositiveBoundary = 0.5f;
-        internal float NegativeBoundary = -0.5f;
+        internal float PositiveBoundary = 0.2f;
+        internal float NegativeBoundary = -0.2f;
 
         public e_EmotionsState CurrentEmotionalState;
         public e_State CurrentState = e_State.NEUTRAL;

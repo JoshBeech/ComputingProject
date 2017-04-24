@@ -54,7 +54,7 @@ namespace MotusSystem
         {
             string[] l_Mood = new string[3];
             l_Mood[0] = MoodManager.GetCurrentMood().MoodID.ToString();
-            l_Mood[1] = MoodManager.GetCurrentMood().SecondaryEmotion.ToString();
+            l_Mood[1] = MoodManager.GetCurrentMood().SecondaryMoodID.ToString();
             l_Mood[2] = MoodManager.GetCurrentMood().CurrentState.StateID.ToString();
 
             return l_Mood;
@@ -141,11 +141,11 @@ namespace MotusSystem
                 {
                     if (l_Emotion.Value > 0)
                     {
-                        l_Emotion.Value -= 0.05f;
+                        l_Emotion.Value -= 0.1f;
                     }
                     else if (l_Emotion.Value < 0)
                     {
-                        l_Emotion.Value += 0.05f;
+                        l_Emotion.Value += 0.1f;
                     }
                     l_Emotion.Value = Utilities.MathUtilities.Clamp(l_Emotion.Value, 1.0f, -1.0f); 
                     l_Emotion.SetState();

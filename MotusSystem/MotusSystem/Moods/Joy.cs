@@ -21,7 +21,7 @@ namespace MotusSystem.Moods
         protected override void SetBlendedMood()
         {
             // All but Fear and Disgust
-            switch (SecondaryEmotion)
+            switch (SecondaryMoodID)
             {
                 case e_EmotionsState.ANGER:
                     CurrentState = Pride;
