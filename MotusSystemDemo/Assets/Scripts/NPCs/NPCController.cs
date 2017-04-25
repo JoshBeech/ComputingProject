@@ -5,6 +5,7 @@ using MotusSystem;
 public class NPCController : MonoBehaviour
 {
     public string CharacterName;
+    public Vector3 DialoguePosition; 
     public List<string> TextLines = new List<string>();
     public List<string> WheelOptions1 = new List<string>();
     public List<string> WheelOptions2 = new List<string>();
@@ -16,6 +17,7 @@ public class NPCController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        DialoguePosition = transform.position + (transform.forward * 2.3f);
         MotusTest = new Motus();
         //MotusTest.SetAction(delegate { Update(); });
 

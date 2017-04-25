@@ -215,6 +215,7 @@ public class DialogueManager : MonoBehaviour
         }
 
         ThePlayer.SwapCamera();
+        ThePlayer.CanMove = true;
         transform.GetChild(0).gameObject.SetActive(false);
     }
 

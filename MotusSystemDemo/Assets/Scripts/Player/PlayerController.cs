@@ -9,12 +9,14 @@ public class PlayerController : MonoBehaviour
 
     public float MovementSpeed;
     public float TurnSpeed;
+    public bool CanMove = true;
 
     public GameObject InteractingNPC;
 
     public DialogueManager TheDialogueManager;
 
     private CharacterController m_Controller;
+
 
     // Use this for initialization
     void Start()
@@ -30,31 +32,41 @@ public class PlayerController : MonoBehaviour
         {
             SwapCamera();
             TheDialogueManager.StartDialogue(InteractingNPC);
+            transform.position = InteractingNPC.GetComponent<NPCController>().DialoguePosition;
+            transform.LookAt(InteractingNPC.transform.position);
+            CanMove = false;
         }
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        float l_VerticalInput = Input.GetAxis("Vertical");
-        float l_HorizontalInput = Input.GetAxis("Horizontal");
+        if (CanMove)
+        {
+            float l_VerticalInput = Input.GetAxis("Vertical");
+            float l_HorizontalInput = Input.GetAxis("Horizontal");
 
-        m_Controller.SimpleMove(transform.forward * l_VerticalInput * MovementSpeed * Time.fixedDeltaTime);
+            m_Controller.SimpleMove(transform.forward * l_VerticalInput * MovementSpeed * Time.fixedDeltaTime);
 
-        transform.Rotate(transform.up * l_HorizontalInput * TurnSpeed * Time.fixedDeltaTime);
+            transform.Rotate(transform.up * l_HorizontalInput * TurnSpeed * Time.fixedDeltaTime);
+        }
     }
 
     public void SwapCamera()
     {
         if(TopDownCamera.activeInHierarchy)
         {
+            TopDownCamera.GetComponent<CameraController>().FadeOut();
             TopDownCamera.SetActive(false);
             ShoulderCamera.SetActive(true);
+            ShoulderCamera.GetComponent<CameraController>().FadeIn();
         }
         else
         {
+            ShoulderCamera.GetComponent<CameraController>().FadeOut();
             ShoulderCamera.SetActive(false);
             TopDownCamera.SetActive(true);
+            TopDownCamera.GetComponent<CameraController>().FadeIn();
         }
     }
 }
