@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 public class DialogueManager : MonoBehaviour
@@ -214,7 +215,8 @@ public class DialogueManager : MonoBehaviour
             l_WheelButton.onClick.RemoveAllListeners();
         }
 
-        ThePlayer.SwapCamera();
+        
+        StartCoroutine(ThePlayer.SwapCamera());
         ThePlayer.CanMove = true;
         transform.GetChild(0).gameObject.SetActive(false);
     }

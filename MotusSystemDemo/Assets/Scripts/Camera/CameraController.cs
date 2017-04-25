@@ -10,30 +10,20 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         FadeScreen = GetComponentInChildren<Image>();
+        FadeScreen.color = Color.black;
         FadeScreen.canvasRenderer.SetAlpha(0.0f);      
     }
 
     public void FadeOut()
-    {
-        FadeScreen.color = Color.black;
+    {        
         FadeScreen.canvasRenderer.SetAlpha(0.0f);
-        StartCoroutine(Fade(1.0f, 1.0f));
-
+        FadeScreen.CrossFadeAlpha(1.0f, 1.0f, false);
     }
 
     public void FadeIn()
     {
-        FadeScreen.color = Color.black;
         FadeScreen.canvasRenderer.SetAlpha(1.0f);
-        StartCoroutine(Fade(0.0f, 1.0f));
+        FadeScreen.CrossFadeAlpha(0.0f, 1.0f, false);
 
-    }
-
-    IEnumerator Fade(float p_FadeTarget, float p_FadeTime)
-    {
-        Fading = true;
-        FadeScreen.CrossFadeAlpha(p_FadeTarget, p_FadeTime, false);
-        yield return new WaitForSeconds(p_FadeTime);
-        Fading = false;
     }
 }

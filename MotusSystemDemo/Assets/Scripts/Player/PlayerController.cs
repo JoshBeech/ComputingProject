@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
     {
         if(CanInteract && Input.GetButtonDown("Interact"))
         {
-            SwapCamera();
+            StartCoroutine(SwapCamera());
             TheDialogueManager.StartDialogue(InteractingNPC);
             transform.position = InteractingNPC.GetComponent<NPCController>().DialoguePosition;
             transform.LookAt(InteractingNPC.transform.position);
@@ -52,11 +52,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void SwapCamera()
+    public IEnumerator SwapCamera()
     {
         if(TopDownCamera.activeInHierarchy)
         {
             TopDownCamera.GetComponent<CameraController>().FadeOut();
+            yield return new WaitForSeconds(1.0f);
             TopDownCamera.SetActive(false);
             ShoulderCamera.SetActive(true);
             ShoulderCamera.GetComponent<CameraController>().FadeIn();
@@ -64,6 +65,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             ShoulderCamera.GetComponent<CameraController>().FadeOut();
+            yield return new WaitForSeconds(1.0f);
             ShoulderCamera.SetActive(false);
             TopDownCamera.SetActive(true);
             TopDownCamera.GetComponent<CameraController>().FadeIn();
