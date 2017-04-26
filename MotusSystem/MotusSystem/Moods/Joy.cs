@@ -22,6 +22,8 @@ namespace MotusSystem.Moods
             MoodStates.Add(e_EmotionsState.ANTICIPATION, new State("Couragous"));
             MoodStates.Add(e_EmotionsState.SURPRISE, new State("Delight"));
             MoodStates.Add(e_EmotionsState.TRUST, new State("Friendly"));
+
+            CurrentMoodState = MoodStates[MoodID];
         }
 
         //protected override void SetBlendedMood()

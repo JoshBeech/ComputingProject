@@ -22,16 +22,16 @@ namespace MotusSystem.Moods
     {
         //internal e_MoodStates StateID;
         internal string StateName = "";
-        internal Dictionary<string, Action> StateActions = new Dictionary<string, Action>(); 
+        private Dictionary<string, Action> StateActions = new Dictionary<string, Action>(); 
 
         internal State(string p_Name = "")
         {
             StateName = p_Name;
         }
 
-        internal void SetStateActions(Dictionary<string, Action> p_Actions)
+        internal void AddAction(string p_Actionkey, Action p_Action)
         {
-            StateActions = p_Actions;
+            StateActions.Add(p_Actionkey, p_Action);
         }
 
         internal void PerformAction(string p_ActionKey)

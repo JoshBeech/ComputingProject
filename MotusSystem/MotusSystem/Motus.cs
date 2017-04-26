@@ -55,7 +55,7 @@ namespace MotusSystem
             string[] l_Mood = new string[3];
             l_Mood[0] = MoodManager.GetCurrentMood().MoodID.ToString();
             l_Mood[1] = MoodManager.GetCurrentMood().SecondaryMoodID.ToString();
-            l_Mood[2] = MoodManager.GetCurrentMood().CurrentState.StateID.ToString();
+            l_Mood[2] = MoodManager.GetCurrentState().StateName;
 
             return l_Mood;
         }
@@ -197,9 +197,15 @@ namespace MotusSystem
             MoodManager.UpdateCurrentMood(new List<FuzzyFSM> { JoySadnessPair, AnticipationSurprisePair, AngerFearPair, TrustDisgustPair });
         }
 
-        public void SetAction(string p_Mood, string p_FunctionKey, Action p_Function)
+
+        // TODO: Overload to take just one emotion allowing to give same action to all states of one mood
+        public void SetAction(e_EmotionsState p_PrimaryEmotion, e_EmotionsState p_SecondaryEmotion, string p_FunctionKey, Action p_Function)
         {
-            //do the thing
+            //Find the target state using the primary and secondary emotions
+            Mood l_TargetMood = MoodManager.GetMood(p_PrimaryEmotion);
+            State l_TargetState = l_TargetMood.MoodStates[p_SecondaryEmotion];
+
+            l_TargetState.AddAction(p_FunctionKey, p_Function);
         }
     }
 }

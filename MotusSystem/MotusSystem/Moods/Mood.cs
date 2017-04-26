@@ -17,7 +17,7 @@ namespace MotusSystem.Moods
         internal float MoodStrength = 0.0f;
 
         internal Dictionary<e_EmotionsState, State> MoodStates = new Dictionary<e_EmotionsState, State>();
-        internal State CurrentState;
+        internal State CurrentMoodState;
         
         /// <summary>
         /// Compare value of other emotions to strength of the mood
@@ -25,9 +25,9 @@ namespace MotusSystem.Moods
         /// Otherwise state will be whatever the mood is
         /// </summary>
         /// <param name="p_RemainingEmotions"></param>
-        public void BlendMood(List<FuzzyFSM> p_RemainingEmotions)
+        public void BlendMood(List<FuzzyFSM> p_RemainingEmotions, ref State p_CurrentAgentState)
         {
-            if (p_RemainingEmotions.Count == 1)
+            if (p_RemainingEmotions.Count <= 1)
             {
                 SecondaryMoodID = MoodID;
             }
@@ -44,28 +44,31 @@ namespace MotusSystem.Moods
                 }
             }
 
-            SetBlendedMood();
+            SetBlendedMood(ref p_CurrentAgentState);
         }
 
-        protected void SetBlendedMood()
+        protected void SetBlendedMood(ref State p_CurrentAgentState)
         {
             State l_State = new State();
             if (MoodStates.TryGetValue(SecondaryMoodID, out l_State))
             {
-                ChangeState(l_State);
+                ChangeState(l_State, ref p_CurrentAgentState);
             }
             else
-                ChangeState(MoodStates[MoodID]);
+                ChangeState(MoodStates[MoodID], ref p_CurrentAgentState);
         }
 
-        protected void ChangeState(State p_TargetState)
+        protected void ChangeState(State p_TargetState, ref State p_CurrentAgentState)
         {
-            if (p_TargetState.StateID == CurrentState.StateID)
+            if(p_CurrentAgentState != null && p_TargetState != null && p_TargetState.StateName == p_CurrentAgentState.StateName)
+            {
                 return;
+            }
 
-            CurrentState.PerformAction("Exit");
-            CurrentState = p_TargetState;
-            CurrentState.PerformAction("Entry");
+            //CurrentState.PerformAction("Exit");
+            CurrentMoodState = p_TargetState;
+            CurrentMoodState.PerformAction("Entry");
+            p_CurrentAgentState = CurrentMoodState;
         }
     }
 }

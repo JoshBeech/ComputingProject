@@ -22,10 +22,12 @@ public class NPCController : MonoBehaviour
         DialoguePosition = transform.position + (transform.forward * 2.3f);
         MotusTest = new Motus();
         //MotusTest.SetAction(delegate { Update(); });
+        MotusTest.SetAction(e_EmotionsState.JOY, e_EmotionsState.JOY, "Entry", delegate { SetFace("Happy3"); });
+        MotusTest.SetAction(e_EmotionsState.NEUTRAL, e_EmotionsState.NEUTRAL, "Entry", delegate { SetFace(); });
+        MotusTest.SetAction(e_EmotionsState.SADNESS, e_EmotionsState.SADNESS, "Entry", delegate { SetFace("Sad"); });
 
         UpdateEmotions();
         UpdateMood();
-
     }
 
     // Update is called once per frame

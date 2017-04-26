@@ -13,6 +13,7 @@ namespace MotusSystem.Moods
     internal class MoodController
     {
         private Mood CurrentMood = new Mood();
+        private State CurrentState = new State();
         private Dictionary<e_EmotionsState, Mood> m_Moods = new Dictionary<e_EmotionsState, Mood>();
         internal List<FuzzyFSM> SortedEmotions = new List<FuzzyFSM>();
 
@@ -29,11 +30,22 @@ namespace MotusSystem.Moods
             m_Moods.Add(e_EmotionsState.NEUTRAL, new Neutral());
 
             CurrentMood = m_Moods[e_EmotionsState.NEUTRAL];
+            CurrentState = CurrentMood.CurrentMoodState;
         }
 
         public Mood GetCurrentMood()
         {
             return CurrentMood;
+        }
+
+        public State GetCurrentState()
+        {
+            return CurrentState;
+        }
+
+        public Mood GetMood(e_EmotionsState p_Emotion)
+        {
+            return m_Moods[p_Emotion];
         }
 
         // Takes/gathers input from all FFSMs - better name?
@@ -54,15 +66,16 @@ namespace MotusSystem.Moods
             {
                 // Set to neutral
                 CurrentMood = m_Moods[e_EmotionsState.NEUTRAL];
+                CurrentMood.BlendMood(SortedEmotions, ref CurrentState);
                 CurrentMood.MoodStrength = 1.0f;
             }
             else 
             {
                 SortedEmotions.Sort((x, y) => y.GetCurrentEmotionStrength().CompareTo(x.GetCurrentEmotionStrength()));
                 CurrentMood = m_Moods[SortedEmotions[0].CurrentEmotionalState];
-                CurrentMood.MoodStrength =SortedEmotions[0].GetCurrentEmotionStrength();
+                CurrentMood.MoodStrength = SortedEmotions[0].GetCurrentEmotionStrength();
                 // Alter mood based off 2nd highest vaule depending on vaules
-                CurrentMood.BlendMood(SortedEmotions);
+                CurrentMood.BlendMood(SortedEmotions, ref CurrentState);
             }
 
         }

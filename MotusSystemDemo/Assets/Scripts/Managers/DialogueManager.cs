@@ -118,14 +118,14 @@ public class DialogueManager : MonoBehaviour
                         l_WheelButton.onClick.AddListener(delegate {
                             p_NPCController.Reaction(MotusSystem.e_EmotionsState.JOY, 0.3f);
                             RefreshTitle(p_NPCController);
-                            p_NPCController.SetFace("Happy3");
+                            //p_NPCController.SetFace("Happy3");
                         });
                         break;
                     case 5:
                         l_WheelButton.onClick.AddListener(delegate {
                             p_NPCController.Reaction(MotusSystem.e_EmotionsState.SADNESS, -0.3f);
                             RefreshTitle(p_NPCController);
-                            p_NPCController.SetFace("Sad");
+                            //p_NPCController.SetFace("Sad");
                         });
                         break;
                     case 6:
