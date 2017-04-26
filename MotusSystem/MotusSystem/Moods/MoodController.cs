@@ -39,32 +39,16 @@ namespace MotusSystem.Moods
         // Takes/gathers input from all FFSMs - better name?
         public void UpdateCurrentMood(List<FuzzyFSM> p_FuzzyEmotions)
         {
-            // Compare the values of all FFSM - turn into lambda and pass to mood to reuse?
-            //FuzzyFSM l_StrongestEmotion = new FuzzyFSM();
-            //float l_StrongestEmotionValue = 0.0f;            
-            //int l_NeutralEmotionCount = 0;
-
-            // Check all emotions that aren't neutral and compare which has the strongest value
-            // and set the current mood to be the strongest emotion
-
             SortedEmotions.Clear();
 
             foreach (FuzzyFSM l_FuzzyEmotion in p_FuzzyEmotions)
             {
                 if (l_FuzzyEmotion.CurrentState != FuzzyFSM.e_State.NEUTRAL)
                 {
-
                     SortedEmotions.Add(l_FuzzyEmotion);
-                    //if (l_FuzzyEmotion.GetCurrentEmotionStrength() > l_StrongestEmotionValue)
-                    //{
-                    //    l_StrongestEmotion = l_FuzzyEmotion;
-                    //    l_StrongestEmotionValue = l_FuzzyEmotion.GetCurrentEmotionStrength();
-                    //}
                 }
             }
-            // Set highest vaule to mood
-
-            
+            // Set highest vaule to mood            
 
             if(SortedEmotions.Count == 0)
             {

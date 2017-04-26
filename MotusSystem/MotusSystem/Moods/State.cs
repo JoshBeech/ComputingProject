@@ -23,11 +23,6 @@ namespace MotusSystem.Moods
         internal e_MoodStates StateID;
         internal Dictionary<string, Action> StateActions = new Dictionary<string, Action>(); 
 
-        internal State()
-        {
-
-        }
-
         internal State(e_MoodStates p_StateID)
         {
             StateID = p_StateID;
@@ -36,6 +31,16 @@ namespace MotusSystem.Moods
         internal void SetStateActions(Dictionary<string, Action> p_Actions)
         {
             StateActions = p_Actions;
+        }
+
+        internal void PerformAction(string p_ActionKey)
+        {
+            Action l_Action;
+
+            if(StateActions.TryGetValue(p_ActionKey, out l_Action))
+            {
+                l_Action();
+            }
         }
     }
 }

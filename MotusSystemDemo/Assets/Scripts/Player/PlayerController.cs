@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
         {
             StartCoroutine(SwapCamera());
             TheDialogueManager.StartDialogue(InteractingNPC);
+            // TODO: link to after camera turns off
             transform.position = InteractingNPC.GetComponent<NPCController>().DialoguePosition;
             transform.LookAt(InteractingNPC.transform.position);
             CanMove = false;
@@ -54,6 +55,7 @@ public class PlayerController : MonoBehaviour
 
     public IEnumerator SwapCamera()
     {
+        // TODO: trigger event when camera turns off to move the player
         if(TopDownCamera.activeInHierarchy)
         {
             TopDownCamera.GetComponent<CameraController>().FadeOut();

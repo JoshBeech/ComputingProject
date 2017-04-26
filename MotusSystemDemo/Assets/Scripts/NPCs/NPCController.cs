@@ -13,6 +13,8 @@ public class NPCController : MonoBehaviour
     public float[] CurrentEmotionValues;
     public string[] CurrentMood;
 
+    public Transform Head;
+
     public Motus MotusTest;
     // Use this for initialization
     void Start()
@@ -23,6 +25,7 @@ public class NPCController : MonoBehaviour
 
         UpdateEmotions();
         UpdateMood();
+
     }
 
     // Update is called once per frame
@@ -47,5 +50,33 @@ public class NPCController : MonoBehaviour
         MotusTest.CreateSensation(p_TargetEmotion, p_ReactionStrength);
         UpdateEmotions();
         UpdateMood();
+    }
+
+    /// <summary>
+    /// Sets the facial expression of the NPC.
+    /// leave parameter blank to remove the equiped expression if one is present
+    /// </summary>
+    /// <param name="p_FaceName"></param>
+    public void SetFace(string p_FaceName = "")
+    {
+        if(Head.childCount >= 2)
+        {
+            foreach(Transform l_Child in Head)
+            {
+                if (l_Child.tag == "Face")
+                    Destroy(l_Child.gameObject);
+            }
+        }
+
+        if(p_FaceName == "")
+        {
+            return;
+        }
+
+        GameObject l_NewFace = Instantiate(FaceManager.GetFace(p_FaceName));
+
+        l_NewFace.transform.SetParent(Head);
+        l_NewFace.transform.position = Head.position;
+        l_NewFace.transform.localEulerAngles = new Vector3(-90.0f, 0.0f, 0.0f);
     }
 }

@@ -7,11 +7,13 @@ namespace MotusSystem.Moods
 {
     internal class Joy : Mood
     {
-        private State Joyful = new State(e_MoodStates.JOYFUL);
-        private State Pride = new State(e_MoodStates.PRIDE);
-        private State Delight = new State(e_MoodStates.DELIGHT);
-        private State Couragous = new State(e_MoodStates.COURAGE);
-        private State Love = new State(e_MoodStates.LOVE);
+        internal State Joyful = new State(e_MoodStates.JOYFUL);
+        internal State Pride = new State(e_MoodStates.PRIDE);
+        internal State Delight = new State(e_MoodStates.DELIGHT);
+        internal State Couragous = new State(e_MoodStates.COURAGE);
+        internal State Love = new State(e_MoodStates.LOVE);
+
+        internal Dictionary<e_EmotionsState, State>;
 
         public Joy()
         {

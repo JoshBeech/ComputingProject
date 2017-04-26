@@ -197,7 +197,7 @@ namespace MotusSystem
             MoodManager.UpdateCurrentMood(new List<FuzzyFSM> { JoySadnessPair, AnticipationSurprisePair, AngerFearPair, TrustDisgustPair });
         }
 
-        public void SetAction(Action p_Action)
+        public void SetAction(string p_Mood, string p_FunctionKey, Action p_Function)
         {
             //do the thing
         }

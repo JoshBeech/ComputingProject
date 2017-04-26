@@ -5,7 +5,7 @@ using System.Collections;
 public class CameraController : MonoBehaviour
 {
     private Image FadeScreen;
-    private bool Fading = false;
+
     // Use this for initialization
     void Start()
     {
@@ -24,6 +24,5 @@ public class CameraController : MonoBehaviour
     {
         FadeScreen.canvasRenderer.SetAlpha(1.0f);
         FadeScreen.CrossFadeAlpha(0.0f, 1.0f, false);
-
     }
 }
