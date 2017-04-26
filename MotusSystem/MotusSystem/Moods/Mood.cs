@@ -13,8 +13,10 @@ namespace MotusSystem.Moods
     internal class Mood
     {
         internal e_EmotionsState MoodID;
-        internal float MoodStrength = 0.0f;
         internal e_EmotionsState SecondaryMoodID;
+        internal float MoodStrength = 0.0f;
+
+        internal Dictionary<e_EmotionsState, State> MoodStates = new Dictionary<e_EmotionsState, State>();
         internal State CurrentState;
         
         /// <summary>
@@ -45,9 +47,18 @@ namespace MotusSystem.Moods
             SetBlendedMood();
         }
 
-        protected virtual void SetBlendedMood() {}
+        protected void SetBlendedMood()
+        {
+            State l_State = new State();
+            if (MoodStates.TryGetValue(SecondaryMoodID, out l_State))
+            {
+                ChangeState(l_State);
+            }
+            else
+                ChangeState(MoodStates[MoodID]);
+        }
 
-        protected virtual void ChangeState(State p_TargetState)
+        protected void ChangeState(State p_TargetState)
         {
             if (p_TargetState.StateID == CurrentState.StateID)
                 return;
