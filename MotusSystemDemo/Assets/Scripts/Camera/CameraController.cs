@@ -4,14 +4,16 @@ using System.Collections;
 
 public class CameraController : MonoBehaviour
 {
-    private Image FadeScreen;
+    public Image FadeScreen;
+    public CanvasRenderer Renderer;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         FadeScreen = GetComponentInChildren<Image>();
         FadeScreen.color = Color.black;
-        FadeScreen.canvasRenderer.SetAlpha(0.0f);      
+        FadeScreen.canvasRenderer.SetAlpha(0.0f);
+        Renderer = FadeScreen.canvasRenderer;   
     }
 
     public void FadeOut()

@@ -21,6 +21,8 @@ public class DialogueManager : MonoBehaviour
     private List<Button> WheelButtons = new List<Button>();
 
     private int m_OptionLayer = 1;
+    private NPC m_CurrentNPCClass;
+    private IInteractable m_CurrentNPCInterface;
 
     // Use this for initialization
     void Start()
@@ -32,59 +34,54 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     // Open Dialogue box
-    public void StartDialogue(GameObject p_NPC)
+    public void StartDialogue(NPC p_NPCType, IInteractable p_NPCInterface)
     {
-        GetDialogue(p_NPC);
-        SetupDialogue(p_NPC.GetComponent<NPCController>());
+        m_CurrentNPCClass = p_NPCType;
+        m_CurrentNPCInterface = p_NPCInterface;
+        GetDialogue();
+        SetupDialogue();
     }
 
     // Get dialogue from a given NPC
-    public void GetDialogue(GameObject p_NPC)
+    public void GetDialogue()
     {
-        NPCController l_NPCController = p_NPC.GetComponent<NPCController>();
-        Speech = new List<string>(l_NPCController.TextLines.Count);
-        Speech.AddRange(l_NPCController.TextLines);
+        //IInteractable l_NPCInterface = p_NPC.GetComponent<ShopKeeper>();
+        Speech = new List<string>(m_CurrentNPCInterface.ITextLines.Count);
+        Speech.AddRange(m_CurrentNPCInterface.ITextLines);
 
-        Options = new List<string>(l_NPCController.WheelOptions1.Count);
-        Options.AddRange(l_NPCController.WheelOptions1);
+        Options = new List<string>(m_CurrentNPCInterface.IWheelOptions1.Count);
+        Options.AddRange(m_CurrentNPCInterface.IWheelOptions1);
 
-        if(l_NPCController.WheelOptions2.Count > 0)
+        if(m_CurrentNPCInterface.IWheelOptions2.Count > 0)
         {
-            Options2 = new List<string>(l_NPCController.WheelOptions2.Count);
-            Options2.AddRange(l_NPCController.WheelOptions2);
+            Options2 = new List<string>(m_CurrentNPCInterface.IWheelOptions2.Count);
+            Options2.AddRange(m_CurrentNPCInterface.IWheelOptions2);
         }
 
-        RefreshTitle(l_NPCController);
+        RefreshTitle();
     }
 
     // Fill in dialogue box/wheel with information
-    public void SetupDialogue(NPCController p_NPCController)
+    public void SetupDialogue()
     {
         // Set Text
         m_NPCText.text = Speech[m_SpeechIndex];
 
-        SetupWheelOptions(p_NPCController, m_OptionLayer);
+        SetupWheelOptions();
 
         // Show box
         transform.GetChild(0).gameObject.SetActive(true);
 
     }
 
-    private void SetupWheelOptions(NPCController p_NPCController, int p_OptionLayer)
+    private void SetupWheelOptions()
     {
-
         List<string> l_OptionList = new List<string>();
 
-        if (p_OptionLayer == 1)
+        if (m_OptionLayer == 1)
             l_OptionList = new List<string>(Options);
-        else if (p_OptionLayer == 2)
+        else if (m_OptionLayer == 2)
             l_OptionList = new List<string>(Options2);
 
         // Clear all listerns from buttons so new ones can be assigned
@@ -109,61 +106,61 @@ public class DialogueManager : MonoBehaviour
                         l_WheelButton.onClick.AddListener(delegate { ContinueDialogue(); });
                         break;
                     case 2:
-                        l_WheelButton.onClick.AddListener(delegate { EndDialogue(); p_NPCController.SetFace(); });
+                        l_WheelButton.onClick.AddListener(delegate { EndDialogue(); m_CurrentNPCClass.SetFace(); });
                         break;
                     case 3:
-                        l_WheelButton.onClick.AddListener(delegate { ChangeWheelOptionsLayer(p_NPCController); });
+                        l_WheelButton.onClick.AddListener(delegate { ChangeWheelOptionsLayer(); });
                         break;
                     case 4:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.JOY, 0.3f);
-                            RefreshTitle(p_NPCController);
+                            m_CurrentNPCClass.Reaction(MotusSystem.e_EmotionsState.JOY, 0.3f);
+                            RefreshTitle();
                             //p_NPCController.SetFace("Happy3");
                         });
                         break;
                     case 5:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.SADNESS, -0.3f);
-                            RefreshTitle(p_NPCController);
+                            m_CurrentNPCClass.Reaction(MotusSystem.e_EmotionsState.SADNESS, -0.3f);
+                            RefreshTitle();
                             //p_NPCController.SetFace("Sad");
                         });
                         break;
                     case 6:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.ANTICIPATION, 0.3f);
-                            RefreshTitle(p_NPCController);
+                            m_CurrentNPCClass.Reaction(MotusSystem.e_EmotionsState.ANTICIPATION, 0.3f);
+                            RefreshTitle();
                         });
                         break;
                     case 7:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.SURPRISE, -0.3f);
-                            RefreshTitle(p_NPCController);
-                            p_NPCController.SetFace("Surprised");
+                            m_CurrentNPCClass.Reaction(MotusSystem.e_EmotionsState.SURPRISE, -0.3f);
+                            RefreshTitle();
+                            m_CurrentNPCClass.SetFace("Surprised");
                         });
                         break;
                     case 8:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.ANGER, 0.3f);
-                            RefreshTitle(p_NPCController);
-                            p_NPCController.SetFace("Angry3");
+                            m_CurrentNPCClass.Reaction(MotusSystem.e_EmotionsState.ANGER, 0.3f);
+                            RefreshTitle();
+                            m_CurrentNPCClass.SetFace("Angry3");
                         });
                         break;
                     case 9:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.FEAR, -0.3f);
-                            RefreshTitle(p_NPCController);
+                            m_CurrentNPCClass.Reaction(MotusSystem.e_EmotionsState.FEAR, -0.3f);
+                            RefreshTitle();
                         });
                         break;
                     case 10:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.TRUST, 0.3f);
-                            RefreshTitle(p_NPCController);
+                            m_CurrentNPCClass.Reaction(MotusSystem.e_EmotionsState.TRUST, 0.3f);
+                            RefreshTitle();
                         });
                         break;
                     case 11:
                         l_WheelButton.onClick.AddListener(delegate {
-                            p_NPCController.Reaction(MotusSystem.e_EmotionsState.DISGUST, -0.3f);
-                            RefreshTitle(p_NPCController);
+                            m_CurrentNPCClass.Reaction(MotusSystem.e_EmotionsState.DISGUST, -0.3f);
+                            RefreshTitle();
                         });
                         break;
                 }
@@ -172,20 +169,20 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    private void ChangeWheelOptionsLayer(NPCController p_NPCController)
+    private void ChangeWheelOptionsLayer()
     {
         if (m_OptionLayer == 1)
             m_OptionLayer = 2;
         else if (m_OptionLayer == 2)
             m_OptionLayer = 1;
 
-        SetupWheelOptions(p_NPCController, m_OptionLayer);
+        SetupWheelOptions();
     }
 
-    private void RefreshTitle(NPCController p_NPCController)
+    private void RefreshTitle()
     {
-        m_NPCName.text = String.Format("{0}\t\t {1}:{2}:{3}", p_NPCController.CharacterName,
-            p_NPCController.CurrentMood[0], p_NPCController.CurrentMood[1], p_NPCController.CurrentMood[2]);
+        m_NPCName.text = String.Format("{0}\t\t {1}:{2}:{3}", m_CurrentNPCClass.Name,
+            m_CurrentNPCClass.CurrentMood[0], m_CurrentNPCClass.CurrentMood[1], m_CurrentNPCClass.CurrentMood[2]);
     }
 
     public void ContinueDialogue()
@@ -210,7 +207,6 @@ public class DialogueManager : MonoBehaviour
         {
             l_WheelButton.onClick.RemoveAllListeners();
         }
-
         
         StartCoroutine(ThePlayer.SwapCamera());
         ThePlayer.CanMove = true;

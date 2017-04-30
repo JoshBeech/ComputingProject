@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
@@ -7,6 +9,9 @@ public class PlayerController : MonoBehaviour
     public GameObject ShoulderCamera;
     public bool CanInteract;
 
+
+    public float WalkSpeed;
+    public float SprintSpeed;
     public float MovementSpeed;
     public float TurnSpeed;
     public bool CanMove = true;
@@ -16,7 +21,10 @@ public class PlayerController : MonoBehaviour
     public DialogueManager TheDialogueManager;
 
     private CharacterController m_Controller;
-
+    private Animator m_Animator;
+    private bool m_Moving = false;
+    private bool m_Sprinting = false;
+    //private int Hash;
 
     // Use this for initialization
     void Start()
@@ -24,18 +32,48 @@ public class PlayerController : MonoBehaviour
         ShoulderCamera.SetActive(false);
         CanInteract = false;
         m_Controller = GetComponent<CharacterController>();
+        m_Animator = GetComponentInChildren<Animator>();
     }
 
     void Update()
     {
         if(CanInteract && Input.GetButtonDown("Interact"))
         {
-            StartCoroutine(SwapCamera());
-            TheDialogueManager.StartDialogue(InteractingNPC);
-            // TODO: link to after camera turns off
-            transform.position = InteractingNPC.GetComponent<NPCController>().DialoguePosition;
-            transform.LookAt(InteractingNPC.transform.position);
-            CanMove = false;
+            Type NPCType = InteractingNPC.GetComponent<NPC>().GetType();
+            Type Interactable = typeof(IInteractable);
+            Debug.Log(Interactable);
+            if(Interactable.IsAssignableFrom(NPCType))
+            {
+                IInteractable NPCInteraction = (IInteractable)InteractingNPC.GetComponent<NPC>();
+                NPCInteraction.Interact(gameObject);
+            }
+            else
+            {
+                Debug.Log("Cannot Assign");
+            }
+            
+
+        }
+
+        if (Input.GetButtonDown("Sprint"))
+            m_Sprinting = m_Sprinting == false ? true : false;
+
+        if(m_Moving && m_Sprinting && !m_Animator.GetBool("Run"))
+        {
+            MovementSpeed = SprintSpeed;
+            m_Animator.SetBool("Walk", false);
+            m_Animator.SetBool("Run", true);
+        }
+        else if (m_Moving && !m_Sprinting  && !m_Animator.GetBool("Walk"))
+        {
+            MovementSpeed = WalkSpeed;
+            m_Animator.SetBool("Run", false);
+            m_Animator.SetBool("Walk", true);
+        }
+        else if (m_Moving == false)
+        {
+            m_Animator.SetBool("Run", false);
+            m_Animator.SetBool("Walk", false);
         }
     }
 
@@ -47,9 +85,19 @@ public class PlayerController : MonoBehaviour
             float l_VerticalInput = Input.GetAxis("Vertical");
             float l_HorizontalInput = Input.GetAxis("Horizontal");
 
+            if (l_VerticalInput > 0.1f || l_VerticalInput <-0.1f)
+                m_Moving = true;
+            else
+                m_Moving = false;
+
+
             m_Controller.SimpleMove(transform.forward * l_VerticalInput * MovementSpeed * Time.fixedDeltaTime);
 
             transform.Rotate(transform.up * l_HorizontalInput * TurnSpeed * Time.fixedDeltaTime);
+        }
+        else
+        {
+            m_Animator.SetBool("Walk", false);
         }
     }
 
