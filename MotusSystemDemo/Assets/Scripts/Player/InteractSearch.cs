@@ -32,7 +32,7 @@ public class InteractSearch : MonoBehaviour
                     if (!m_PlayerController.CanInteract)
                     {
                         m_PlayerController.CanInteract = true;
-                        m_PlayerController.InteractingNPC = l_InteractableObject.Value;
+                        m_PlayerController.InteractableObject = l_InteractableObject.Value;
                     }
 
                     InteractPrompt.text = "Press E to interact with " + l_InteractableObject.Key;
@@ -45,7 +45,7 @@ public class InteractSearch : MonoBehaviour
                     if (m_PlayerController.CanInteract)
                     {
                         m_PlayerController.CanInteract = false;
-                        m_PlayerController.InteractingNPC = null;
+                        m_PlayerController.InteractableObject = null;
                     }
                 }
             }

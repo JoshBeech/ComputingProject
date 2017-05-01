@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class ShopKeeper : NPC, IInteractable
+public class ShopKeeper : NPC, ITalkable
 {
     public bool IInDialogue { get; set; }
     public Vector3 IDialoguePosition { get; set; }

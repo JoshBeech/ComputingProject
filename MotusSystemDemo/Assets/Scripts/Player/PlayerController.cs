@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public GameObject ShoulderCamera;
     public bool CanInteract;
 
+    public GameObject Companion;
 
     public float WalkSpeed;
     public float SprintSpeed;
@@ -18,7 +19,7 @@ public class PlayerController : MonoBehaviour
     public bool IsMoving = false;
     public bool IsSprinting = false;
 
-    public GameObject InteractingNPC;
+    public GameObject InteractableObject;
 
     public DialogueManager TheDialogueManager;
 
@@ -38,13 +39,13 @@ public class PlayerController : MonoBehaviour
     {
         if(CanInteract && Input.GetButtonDown("Interact"))
         {
-            Type NPCType = InteractingNPC.GetComponent<NPC>().GetType();
+            Type NPCType = InteractableObject.GetComponent<NPC>().GetType();
             Type Interactable = typeof(IInteractable);
             Debug.Log(Interactable);
             if(Interactable.IsAssignableFrom(NPCType))
             {
-                IInteractable NPCInteraction = (IInteractable)InteractingNPC.GetComponent<NPC>();
-                NPCInteraction.Interact(gameObject);
+                IInteractable InteractableComponent = (IInteractable)InteractableObject.GetComponent<NPC>();
+                InteractableComponent.Interact(gameObject);
             }
             else
             {
@@ -105,19 +106,50 @@ public class PlayerController : MonoBehaviour
         // TODO: trigger event when camera turns off to move the player
         if(TopDownCamera.activeInHierarchy)
         {
-            TopDownCamera.GetComponent<CameraController>().FadeOut();
+            if(!TopDownCamera.GetComponent<CameraController>().IsFading)
+                TopDownCamera.GetComponent<CameraController>().FadeOut();
+
             yield return new WaitForSeconds(1.0f);
             TopDownCamera.SetActive(false);
             ShoulderCamera.SetActive(true);
-            ShoulderCamera.GetComponent<CameraController>().FadeIn();
+            if (!ShoulderCamera.GetComponent<CameraController>().IsFading)
+                ShoulderCamera.GetComponent<CameraController>().FadeIn();
         }
         else
         {
-            ShoulderCamera.GetComponent<CameraController>().FadeOut();
+            if (!ShoulderCamera.GetComponent<CameraController>().IsFading)
+                ShoulderCamera.GetComponent<CameraController>().FadeOut();
             yield return new WaitForSeconds(1.0f);
             ShoulderCamera.SetActive(false);
             TopDownCamera.SetActive(true);
-            TopDownCamera.GetComponent<CameraController>().FadeIn();
+            if (!TopDownCamera.GetComponent<CameraController>().IsFading)
+                TopDownCamera.GetComponent<CameraController>().FadeIn();
         }
+    }
+
+    public void Warp(Transform p_PlayerWarpLocation, Transform p_CompanionWarpLocation = null)
+    {
+        if(Companion != null)
+        {
+            StartCoroutine(Teleport(p_PlayerWarpLocation, p_CompanionWarpLocation));
+        }
+        else
+            StartCoroutine(Teleport(p_PlayerWarpLocation, null));
+    }
+
+
+    public IEnumerator Teleport(Transform p_Location, Transform p_CompanionLocation = null) 
+    {
+        if (!TopDownCamera.GetComponent<CameraController>().IsFading)
+            TopDownCamera.GetComponent<CameraController>().FadeOut();
+        yield return new WaitForSeconds(1.0f);
+        transform.position = p_Location.position;
+
+        if (p_CompanionLocation != null)
+            Companion.GetComponent<Companion>().Agent.Warp(p_CompanionLocation.position);
+
+        if (!TopDownCamera.GetComponent<CameraController>().IsFading)
+            TopDownCamera.GetComponent<CameraController>().FadeIn();
+
     }
 }

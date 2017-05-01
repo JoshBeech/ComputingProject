@@ -22,7 +22,7 @@ public class DialogueManager : MonoBehaviour
 
     private int m_OptionLayer = 1;
     private NPC m_CurrentNPCClass;
-    private IInteractable m_CurrentNPCInterface;
+    private ITalkable m_CurrentNPCInterface;
 
     // Use this for initialization
     void Start()
@@ -35,7 +35,7 @@ public class DialogueManager : MonoBehaviour
     }
 
     // Open Dialogue box
-    public void StartDialogue(NPC p_NPCType, IInteractable p_NPCInterface)
+    public void StartDialogue(NPC p_NPCType, ITalkable p_NPCInterface)
     {
         m_CurrentNPCClass = p_NPCType;
         m_CurrentNPCInterface = p_NPCInterface;

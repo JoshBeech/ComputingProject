@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Companion : NPC, IInteractable
+public class Companion : NPC, ITalkable
 {
     // Interactable variables 
     public bool IInDialogue { get; set; }
