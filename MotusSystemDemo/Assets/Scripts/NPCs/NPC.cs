@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using MotusSystem;
 
 public abstract class NPC : MonoBehaviour
@@ -12,6 +12,9 @@ public abstract class NPC : MonoBehaviour
     public string[] CurrentEmotions;
     public float[] CurrentEmotionValues;
     public string[] CurrentMood;
+
+    public Animator NPCAnimator;
+    
 
     // Use this for initialization
     protected void Start()
@@ -26,6 +29,8 @@ public abstract class NPC : MonoBehaviour
 
         UpdateEmotions();
         UpdateMood();
+
+        NPCAnimator = GetComponentInChildren<Animator>();
     }
 
 

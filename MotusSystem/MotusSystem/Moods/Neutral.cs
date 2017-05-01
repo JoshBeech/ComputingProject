@@ -7,8 +7,6 @@ namespace MotusSystem.Moods
 {
     class Neutral : Mood
     {
-        //internal State m_Neutral = new State("Neutral");
-
         public Neutral()
         {
             MoodID = e_EmotionsState.NEUTRAL;
@@ -17,10 +15,5 @@ namespace MotusSystem.Moods
             MoodStates.Add(e_EmotionsState.NEUTRAL, new State("Neutral"));
             CurrentMoodState = MoodStates[MoodID];
         }
-
-        //protected override void SetBlendedMood()
-        //{
-        //    CurrentState = m_Neutral;
-        //}
     }
 }

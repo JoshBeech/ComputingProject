@@ -106,7 +106,7 @@ public class DialogueManager : MonoBehaviour
                         l_WheelButton.onClick.AddListener(delegate { ContinueDialogue(); });
                         break;
                     case 2:
-                        l_WheelButton.onClick.AddListener(delegate { EndDialogue(); m_CurrentNPCClass.SetFace(); });
+                        l_WheelButton.onClick.AddListener(delegate { EndDialogue(); });
                         break;
                     case 3:
                         l_WheelButton.onClick.AddListener(delegate { ChangeWheelOptionsLayer(); });
@@ -115,14 +115,12 @@ public class DialogueManager : MonoBehaviour
                         l_WheelButton.onClick.AddListener(delegate {
                             m_CurrentNPCClass.Reaction(MotusSystem.e_EmotionsState.JOY, 0.3f);
                             RefreshTitle();
-                            //p_NPCController.SetFace("Happy3");
                         });
                         break;
                     case 5:
                         l_WheelButton.onClick.AddListener(delegate {
                             m_CurrentNPCClass.Reaction(MotusSystem.e_EmotionsState.SADNESS, -0.3f);
                             RefreshTitle();
-                            //p_NPCController.SetFace("Sad");
                         });
                         break;
                     case 6:
@@ -210,6 +208,7 @@ public class DialogueManager : MonoBehaviour
         
         StartCoroutine(ThePlayer.SwapCamera());
         ThePlayer.CanMove = true;
+        m_CurrentNPCInterface.LeaveDialogue();
         transform.GetChild(0).gameObject.SetActive(false);
     }
 

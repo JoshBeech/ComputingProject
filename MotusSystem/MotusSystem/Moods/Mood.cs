@@ -15,6 +15,7 @@ namespace MotusSystem.Moods
         internal e_EmotionsState MoodID;
         internal e_EmotionsState SecondaryMoodID;
         internal float MoodStrength = 0.0f;
+        internal float BlendedStrength = 0.0f;
 
         internal Dictionary<e_EmotionsState, State> MoodStates = new Dictionary<e_EmotionsState, State>();
         internal State CurrentMoodState;
@@ -45,6 +46,13 @@ namespace MotusSystem.Moods
             }
 
             SetBlendedMood(ref p_CurrentAgentState);
+
+            if (SecondaryMoodID != MoodID)
+            {
+                BlendedStrength = (MoodStrength + p_RemainingEmotions[1].GetCurrentEmotionStrength()) / 2;
+            }
+            else
+                BlendedStrength = MoodStrength;
         }
 
         protected void SetBlendedMood(ref State p_CurrentAgentState)
@@ -65,7 +73,7 @@ namespace MotusSystem.Moods
                 return;
             }
 
-            //CurrentState.PerformAction("Exit");
+            p_CurrentAgentState.PerformAction("Exit");
             CurrentMoodState = p_TargetState;
             CurrentMoodState.PerformAction("Entry");
             p_CurrentAgentState = CurrentMoodState;

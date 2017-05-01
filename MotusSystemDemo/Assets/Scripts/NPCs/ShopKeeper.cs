@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 public class ShopKeeper : NPC, IInteractable
 {
-    public Vector3 DialoguePosition { get; set; }
+    public bool IInDialogue { get; set; }
+    public Vector3 IDialoguePosition { get; set; }
     public List<string> ITextLines { get; set; }
     public List<string> IWheelOptions1 { get; set; }
     public List<string> IWheelOptions2 { get; set; }
@@ -17,7 +18,9 @@ public class ShopKeeper : NPC, IInteractable
     new void Start()
     {
         base.Start();
-        DialoguePosition = transform.position + (transform.forward * 2.3f);
+
+        IInDialogue = false;
+        IDialoguePosition = transform.position + (transform.forward * 2.3f);
 
         ITextLines = TextLines;
         IWheelOptions1 = WheelOptions1;
@@ -30,9 +33,15 @@ public class ShopKeeper : NPC, IInteractable
 
         StartCoroutine(l_PlayerController.SwapCamera());
         l_PlayerController.TheDialogueManager.StartDialogue(this, this);
+        IInDialogue = true;
         // TODO: link to after camera turns off
-        p_Player.transform.position = DialoguePosition;
+        p_Player.transform.position = IDialoguePosition;
         p_Player.transform.LookAt(transform.position);
         l_PlayerController.CanMove = false;
+    }
+
+    public void LeaveDialogue()
+    {
+        IInDialogue = false;
     }
 }

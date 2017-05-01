@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     public float MovementSpeed;
     public float TurnSpeed;
     public bool CanMove = true;
+    public bool IsMoving = false;
+    public bool IsSprinting = false;
 
     public GameObject InteractingNPC;
 
@@ -22,9 +24,6 @@ public class PlayerController : MonoBehaviour
 
     private CharacterController m_Controller;
     private Animator m_Animator;
-    private bool m_Moving = false;
-    private bool m_Sprinting = false;
-    //private int Hash;
 
     // Use this for initialization
     void Start()
@@ -56,21 +55,21 @@ public class PlayerController : MonoBehaviour
         }
 
         if (Input.GetButtonDown("Sprint"))
-            m_Sprinting = m_Sprinting == false ? true : false;
+            IsSprinting = IsSprinting == false ? true : false;
 
-        if(m_Moving && m_Sprinting && !m_Animator.GetBool("Run"))
+        if(IsMoving && IsSprinting && !m_Animator.GetBool("Run"))
         {
             MovementSpeed = SprintSpeed;
             m_Animator.SetBool("Walk", false);
             m_Animator.SetBool("Run", true);
         }
-        else if (m_Moving && !m_Sprinting  && !m_Animator.GetBool("Walk"))
+        else if (IsMoving && !IsSprinting  && !m_Animator.GetBool("Walk"))
         {
             MovementSpeed = WalkSpeed;
             m_Animator.SetBool("Run", false);
             m_Animator.SetBool("Walk", true);
         }
-        else if (m_Moving == false)
+        else if (IsMoving == false)
         {
             m_Animator.SetBool("Run", false);
             m_Animator.SetBool("Walk", false);
@@ -86,9 +85,9 @@ public class PlayerController : MonoBehaviour
             float l_HorizontalInput = Input.GetAxis("Horizontal");
 
             if (l_VerticalInput > 0.1f || l_VerticalInput <-0.1f)
-                m_Moving = true;
+                IsMoving = true;
             else
-                m_Moving = false;
+                IsMoving = false;
 
 
             m_Controller.SimpleMove(transform.forward * l_VerticalInput * MovementSpeed * Time.fixedDeltaTime);
