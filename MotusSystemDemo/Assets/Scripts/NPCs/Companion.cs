@@ -18,11 +18,14 @@ public class Companion : NPC, ITalkable
 
     // Companion Variables
     public GameObject Player;
-    private PlayerController m_PlayerController;
     //public NavMeshAgent Agent;
     public Transform House;
     public bool CompanionActive = true;
     public bool InsideWall = true;
+
+    private PlayerController m_PlayerController;
+    public Combat CombatScript;
+
 
     // Use this for initialization
     new void Start()
@@ -42,6 +45,13 @@ public class Companion : NPC, ITalkable
         Agent.destination = Player.transform.position;
         House = GameObject.Find("CompanionHouse").transform;
 
+        CombatScript = GetComponent<Combat>();
+        CombatScript.enabled = false;
+
+        NPCAnimations = CombatScript.NPCAnimations;
+        NPCAnimator.SetBool(NPCAnimations["Relax"], false);
+        NPCAnimator.SetBool(NPCAnimations["Idle"], true);
+
         NPCMotus.SetAction(MotusSystem.e_EmotionsState.ANGER, MotusSystem.e_EmotionsState.DISGUST, "Entry", delegate { LeavePlayer(); });
         NPCMotus.SetAction(MotusSystem.e_EmotionsState.ANGER, MotusSystem.e_EmotionsState.DISGUST, "Exit", delegate { FollowPlayer(); });
 
@@ -59,45 +69,56 @@ public class Companion : NPC, ITalkable
     // Update is called once per frame
     void Update()
     {
-        if (!IInDialogue)
-        {           
-            if (CompanionActive)
+        if (!CombatScript.enabled && !CombatScript.Dead)
+        {
+            if (!IInDialogue)
             {
-                if (Vector3.Distance(transform.position, Player.transform.position) > Agent.stoppingDistance - 1.0f)
-                {                    
-                    Agent.destination = Player.transform.position;
-
-                    if (m_PlayerController.IsMoving && m_PlayerController.IsSprinting)
-                    {
-                        //ChangeSteering(4.0f, 2.0f, 6.0f);                        
-                    }
-                    else if(m_PlayerController.IsMoving && !m_PlayerController.IsSprinting)
-                    {
-                        //ChangeSteering(2.0f, 2.0f, 4.0f);
-                    }
-                }
-
-                if(Agent.velocity == Vector3.zero)
+                if (CompanionActive)
                 {
-                    NPCAnimator.SetBool("Walk", false);
-                    NPCAnimator.SetBool("Run", false);
-                }
+                    if (Vector3.Distance(transform.position, Player.transform.position) > Agent.stoppingDistance - 1.0f)
+                    {
+                        Agent.destination = Player.transform.position;
 
+                        if (m_PlayerController.IsMoving && m_PlayerController.IsSprinting)
+                        {
+                            //ChangeSteering(4.0f, 2.0f, 6.0f);                        
+                        }
+                        else if (m_PlayerController.IsMoving && !m_PlayerController.IsSprinting)
+                        {
+                            //ChangeSteering(2.0f, 2.0f, 4.0f);
+                        }
+                    }
+
+                    if (Agent.velocity == Vector3.zero)
+                    {
+                        NPCAnimator.SetBool(NPCAnimations["Walk"], false);
+                        NPCAnimator.SetBool(NPCAnimations["Run"], false);
+                    }
+
+                }
+                else
+                {
+                    if (Agent.velocity == Vector3.zero && Agent.remainingDistance < 1f)
+                    {
+                        NPCAnimator.SetBool("Idle", true);
+                        Vector3 RotationVector = Vector3.RotateTowards(transform.forward, House.transform.forward, 5.0F * Time.deltaTime, 0.0F);
+                        transform.rotation = Quaternion.LookRotation(RotationVector);
+                    }
+                }
             }
             else
             {
-                if(Agent.velocity == Vector3.zero && Agent.remainingDistance < 1f)
-                {
-                    NPCAnimator.SetBool("Relax", true);
-                    Vector3 RotationVector = Vector3.RotateTowards(transform.forward, House.transform.forward, 5.0F * Time.deltaTime, 0.0F);
-                    transform.rotation = Quaternion.LookRotation(RotationVector);
-                }
+                Agent.Stop();
             }
         }
         else
         {
-            Agent.Stop();
+            if (CombatScript.Engaged == false)
+            {
+                CombatScript.enabled = false;
+            }
         }
+
     }
 
     public void Interact(GameObject p_Player)
@@ -164,6 +185,6 @@ public class Companion : NPC, ITalkable
 
     public void EnterCombat()
     {
-        // Deactivate this and activate combat script
+        CombatScript.enabled = true;
     }
 }

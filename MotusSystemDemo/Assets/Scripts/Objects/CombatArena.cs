@@ -5,45 +5,85 @@ public class CombatArena : MonoBehaviour
 {
     public List<GameObject> EnemyCombatants = new List<GameObject>();
     public List<GameObject> FriendlyCombatants = new List<GameObject>();
+    public bool AllEnemiesDefeated = false;
+
+    private bool CombatInprogress = false;
+
+
+    void Update()
+    {
+        if(CombatInprogress)
+        {
+            int l_DeadEnemyCount = 0;
+
+            foreach(GameObject l_Enemy in EnemyCombatants)
+            {
+                Combat NPCCombat = l_Enemy.GetComponent<Combat>();
+                if (NPCCombat.Dead)
+                    l_DeadEnemyCount++;
+            }
+
+            if (l_DeadEnemyCount == EnemyCombatants.Count)
+            {
+                AllEnemiesDefeated = true;
+                CombatInprogress = false;
+                
+                foreach (GameObject l_Friendly in FriendlyCombatants)
+                {
+                    Combat CombatNPC = l_Friendly.GetComponent<Combat>();
+
+                    if (CombatNPC != null)
+                    {
+                        CombatNPC.Engaged = false;
+                    }
+                }
+
+            }
+        }
+    }
+
 
     // If player enters the area and there are enemies
     // Add player to friendly list, give lists to opposing sides
     // Tell each combatant to pick a target
     void OnTriggerEnter(Collider p_Collider)
     {
-        if(p_Collider.gameObject.name == "Player" && EnemyCombatants.Count > 0)
+        if(p_Collider.gameObject.name == "Player" && !CombatInprogress)
         {
             PlayerController l_Player = p_Collider.gameObject.GetComponent<PlayerController>();
 
             if (!FriendlyCombatants.Contains(p_Collider.gameObject))
             {
-                FriendlyCombatants.Add(p_Collider.gameObject);
-
                 if (l_Player.Companion != null)
                     FriendlyCombatants.Add(l_Player.Companion);
             }
 
             foreach(GameObject l_Friendly in FriendlyCombatants)
             {
-                ICombat CombatNPC = l_Friendly.GetComponent<ICombat>();
+                if (l_Friendly == l_Player.Companion)
+                    l_Player.Companion.GetComponent<Companion>().EnterCombat();
 
+                Combat CombatNPC = l_Friendly.GetComponent<Combat>();
+                
                 if(CombatNPC != null)
                 {
-                    CombatNPC.IOpponents = EnemyCombatants;
+                    CombatNPC.Opponents = EnemyCombatants;
                     CombatNPC.SetTarget();
                 }               
             }
 
             foreach (GameObject l_Enemy in EnemyCombatants)
             {
-                ICombat CombatNPC = l_Enemy.GetComponent<ICombat>();
+                Combat CombatNPC = l_Enemy.GetComponent<Combat>();
 
                 if (CombatNPC != null)
                 {
-                    CombatNPC.IOpponents = FriendlyCombatants;
+                    CombatNPC.Opponents = FriendlyCombatants;
                     CombatNPC.SetTarget();
                 }
             }
+
+            CombatInprogress = true;
         }
     }
 }

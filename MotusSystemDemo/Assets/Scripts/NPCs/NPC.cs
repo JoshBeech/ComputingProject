@@ -15,7 +15,8 @@ public abstract class NPC : MonoBehaviour
     public string[] CurrentMood;
 
     public Animator NPCAnimator;
-    
+    public Dictionary<string, int> NPCAnimations = new Dictionary<string, int>();
+
 
     // Use this for initialization
     protected void Start()

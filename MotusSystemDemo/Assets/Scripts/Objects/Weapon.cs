@@ -1,16 +1,17 @@
 ﻿using UnityEngine;
-using System.Collections;
 
+[RequireComponent(typeof(BoxCollider))]
 public class Weapon : MonoBehaviour
 {
+    public string WeaponType;
     public int Damage;
 
     void OnTriggerEnter(Collider p_Collider)
     {
-        ICombat CombatNPC = p_Collider.GetComponent<ICombat>();
+        Combat CombatNPC = p_Collider.GetComponent<Combat>();
 
         if (CombatNPC != null)        
-            CombatNPC.IHealth -= Damage;
+            CombatNPC.Health -= Damage;
         
     }
 }
