@@ -35,6 +35,6 @@ public class CameraController : MonoBehaviour
     {
         IsFading = true;
         FadeScreen.canvasRenderer.SetAlpha(1.0f);
-        StartCoroutine(Fade(1.0f));
+        StartCoroutine(Fade(0.0f));
     }
 }

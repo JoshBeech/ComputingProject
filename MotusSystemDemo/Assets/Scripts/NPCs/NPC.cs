@@ -7,6 +7,7 @@ public abstract class NPC : MonoBehaviour
     public string Name;
 
     public Transform Head;
+    public NavMeshAgent Agent;
 
     public Motus NPCMotus;
     public string[] CurrentEmotions;

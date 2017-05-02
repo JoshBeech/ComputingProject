@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
 
     private CharacterController m_Controller;
     private Animator m_Animator;
+    private Dictionary<string, int> m_Animations = new Dictionary<string, int>();
 
     // Use this for initialization
     void Start()
@@ -33,47 +34,59 @@ public class PlayerController : MonoBehaviour
         CanInteract = false;
         m_Controller = GetComponent<CharacterController>();
         m_Animator = GetComponentInChildren<Animator>();
+
+        // Store animations I will be using (faster for animator calls)
+        m_Animations.Add("Walk", Animator.StringToHash("Walk"));
+        m_Animations.Add("Run", Animator.StringToHash("Run"));
+        m_Animations.Add("Relax", Animator.StringToHash("Relax"));
+        m_Animations.Add("Attack", Animator.StringToHash("Melee Right Attack 01"));
+        m_Animations.Add("Die", Animator.StringToHash("Die"));
     }
 
     void Update()
     {
         if(CanInteract && Input.GetButtonDown("Interact"))
-        {
-            Type NPCType = InteractableObject.GetComponent<NPC>().GetType();
-            Type Interactable = typeof(IInteractable);
-            Debug.Log(Interactable);
-            if(Interactable.IsAssignableFrom(NPCType))
-            {
-                IInteractable InteractableComponent = (IInteractable)InteractableObject.GetComponent<NPC>();
+        {            
+            IInteractable InteractableComponent = InteractableObject.GetComponent<IInteractable>();
+
+            if(InteractableComponent != null)
+            { 
                 InteractableComponent.Interact(gameObject);
             }
             else
             {
                 Debug.Log("Cannot Assign");
             }
-            
+        }
 
+        if(Input.GetButtonDown("Attack"))
+        {
+            if (!m_Animator.GetBool(m_Animations["Attack"]))
+            {
+                m_Animator.SetTrigger(m_Animations["Attack"]);
+            }
+                    
         }
 
         if (Input.GetButtonDown("Sprint"))
             IsSprinting = IsSprinting == false ? true : false;
 
-        if(IsMoving && IsSprinting && !m_Animator.GetBool("Run"))
+        if(IsMoving && IsSprinting && !m_Animator.GetBool(m_Animations["Run"]))
         {
             MovementSpeed = SprintSpeed;
-            m_Animator.SetBool("Walk", false);
-            m_Animator.SetBool("Run", true);
+            m_Animator.SetBool(m_Animations["Walk"], false);
+            m_Animator.SetBool(m_Animations["Run"], true);
         }
-        else if (IsMoving && !IsSprinting  && !m_Animator.GetBool("Walk"))
+        else if (IsMoving && !IsSprinting  && !m_Animator.GetBool(m_Animations["Walk"]))
         {
             MovementSpeed = WalkSpeed;
-            m_Animator.SetBool("Run", false);
-            m_Animator.SetBool("Walk", true);
+            m_Animator.SetBool(m_Animations["Run"], false);
+            m_Animator.SetBool(m_Animations["Walk"], true);
         }
         else if (IsMoving == false)
         {
-            m_Animator.SetBool("Run", false);
-            m_Animator.SetBool("Walk", false);
+            m_Animator.SetBool(m_Animations["Run"], false);
+            m_Animator.SetBool(m_Animations["Walk"], false);
         }
     }
 
@@ -97,7 +110,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            m_Animator.SetBool("Walk", false);
+            m_Animator.SetBool(m_Animations["Walk"], false);
         }
     }
 

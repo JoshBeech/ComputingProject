@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(NavMeshAgent))]
 public class Companion : NPC, ITalkable
 {
     // Interactable variables 
@@ -18,7 +19,7 @@ public class Companion : NPC, ITalkable
     // Companion Variables
     public GameObject Player;
     private PlayerController m_PlayerController;
-    public NavMeshAgent Agent;
+    //public NavMeshAgent Agent;
     public Transform House;
     public bool CompanionActive = true;
     public bool InsideWall = true;
@@ -36,6 +37,7 @@ public class Companion : NPC, ITalkable
 
         Player = GameObject.Find("Player");
         m_PlayerController = Player.GetComponent<PlayerController>();
+        m_PlayerController.Companion = gameObject;
         Agent = GetComponent<NavMeshAgent>();
         Agent.destination = Player.transform.position;
         House = GameObject.Find("CompanionHouse").transform;
@@ -126,6 +128,7 @@ public class Companion : NPC, ITalkable
     public void FollowPlayer()
     {
         CompanionActive = true;
+        m_PlayerController.Companion = gameObject;
         Agent.destination = Player.transform.position;
         Agent.stoppingDistance = 4.0f;
     }
@@ -133,7 +136,7 @@ public class Companion : NPC, ITalkable
     public void LeavePlayer()
     {
         CompanionActive = false;
-
+        m_PlayerController.Companion = null;
         // Check if outside castle wall,
         // if yes head to wall then warp inside then head to house
         Agent.destination = House.position;
