@@ -1,18 +1,23 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System;
+using UnityEngine;
 using MotusSystem;
+using System.Collections.Generic;
 
 public class Combat : NPC
 {
+    [Header("CombatNPC Settings")]
+    public GameObject Base;
     public NavMeshObstacle NavObstacle;
     public Weapon NPCWeapon;
     public List<GameObject> Opponents = new List<GameObject>();
     public GameObject Target;
     public int Health = 10;
-    public bool Dead = false;
     public bool Engaged = false;
-    public bool OnGuard = false;
+    public bool Alert = false;
+    public bool Dead = false;
+    public bool Fleeing = false;
     public e_EmotionsState DeathFeeling;
+    public event EventHandler<NPCDiedEventArgs> NPCDied;
 
     // Use this for initialization
     new void Start()
@@ -33,9 +38,13 @@ public class Combat : NPC
 
         NPCAnimator.SetBool(NPCAnimations["Relax"], true);
 
-        Health = 10;
         Dead = false;
         Engaged = false;
+
+        NPCDied += f_NPCDied;
+
+        NPCMotus.SetAction(e_EmotionsState.FEAR, e_EmotionsState.FEAR, "Entry", delegate { Flee(); });
+        NPCMotus.SetAction(e_EmotionsState.ANGER, e_EmotionsState.ANGER, "Entry", delegate { Enrage(); });
     }
 
     private void SetupAnimations()
@@ -114,25 +123,16 @@ public class Combat : NPC
                     }
                 }
             }
-            else if(OnGuard)
-            {     
-                if (NPCAnimator.GetBool(NPCAnimations["Defend"]) == false)
-                {
-                    NPCAnimator.SetBool(NPCAnimations["Relax"], false);
-                    NPCAnimator.SetBool(NPCAnimations["Defend"], true);
-                }
-            }
         }
-
     }
 
 
     public void SetTarget()
     {
-        int l_RandomIndex = Random.Range(0, Opponents.Count);
+        int l_RandomIndex = UnityEngine.Random.Range(0, Opponents.Count);
         Target = Opponents[l_RandomIndex];
 
-        if (Target != null)
+        if (Target != null && Agent != null)
         {
             Agent.destination = Target.transform.position;
             Engaged = true;
@@ -140,6 +140,7 @@ public class Combat : NPC
             NPCAnimator.SetBool(NPCAnimations["Defend"], false);
         }
     }
+
     public void Die()
     {
         if (!NPCAnimator.GetBool(NPCAnimations["Die"]))
@@ -160,7 +161,26 @@ public class Combat : NPC
         Agent.enabled = false;
         if(NavObstacle!= null)
             NavObstacle.enabled = true;
-        Debug.Log("Dying");
+
+        NPCDiedEventArgs l_args = new NPCDiedEventArgs();
+        l_args.Emotion = DeathFeeling;
+        onDeath(l_args);
+    }
+
+    protected virtual void onDeath(NPCDiedEventArgs e)
+    {
+        EventHandler<NPCDiedEventArgs> handler = NPCDied;
+
+        if(handler != null)
+        {
+            handler(this, e);
+        }
+    }
+
+    public void f_NPCDied(object sender, NPCDiedEventArgs e)
+    {
+        if(!Dead)
+            Reaction(e.Emotion, 0.2f);
     }
 
     public void Disengage()
@@ -171,13 +191,19 @@ public class Combat : NPC
         Target = null;
     }
 
-
     public void Enrage()
     {
-
+        NPCWeapon.Damage = 3;
+        Health = 12;
     }
+
+
     public void Flee()
     {
-
+        Disengage(); ;
+        Agent.destination = Base.transform.position;
+        Agent.speed = 8;
+        NPCAnimator.SetBool(NPCAnimations["Run"], true);
+        Fleeing = true;
     }
 }

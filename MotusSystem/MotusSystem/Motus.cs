@@ -49,7 +49,6 @@ namespace MotusSystem
             FuzzyEmotions.Add(TrustDisgustPair);
         }
 
-
         public string[] GetCurrentMood()
         {
             string[] l_Mood = new string[3];
@@ -85,8 +84,17 @@ namespace MotusSystem
 
         public void CreateSensation(e_EmotionsState p_EmotionTarget, float p_Strength)
         {
-            Sensation l_NewSensation =  new Sensation(p_Strength);
-            switch(p_EmotionTarget)
+            Sensation l_NewSensation;
+
+            if(p_EmotionTarget == e_EmotionsState.SADNESS || p_EmotionTarget == e_EmotionsState.SURPRISE
+                || p_EmotionTarget == e_EmotionsState.FEAR || p_EmotionTarget == e_EmotionsState.DISGUST)
+            {
+                l_NewSensation = new Sensation(-p_Strength);
+            }
+            else
+                l_NewSensation = new Sensation(p_Strength);
+            
+            switch (p_EmotionTarget)
             {
                 case e_EmotionsState.JOY:
                     JoySadnessPair.ReceiveSensation(l_NewSensation);

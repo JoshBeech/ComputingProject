@@ -119,7 +119,7 @@ public class DialogueManager : MonoBehaviour
                         break;
                     case 5:
                         l_WheelButton.onClick.AddListener(delegate {
-                            m_CurrentNPCClass.Reaction(MotusSystem.e_EmotionsState.SADNESS, -0.3f);
+                            m_CurrentNPCClass.Reaction(MotusSystem.e_EmotionsState.SADNESS, 0.3f);
                             RefreshTitle();
                         });
                         break;
@@ -131,7 +131,7 @@ public class DialogueManager : MonoBehaviour
                         break;
                     case 7:
                         l_WheelButton.onClick.AddListener(delegate {
-                            m_CurrentNPCClass.Reaction(MotusSystem.e_EmotionsState.SURPRISE, -0.3f);
+                            m_CurrentNPCClass.Reaction(MotusSystem.e_EmotionsState.SURPRISE, 0.3f);
                             RefreshTitle();
                             m_CurrentNPCClass.SetFace("Surprised");
                         });
@@ -145,7 +145,7 @@ public class DialogueManager : MonoBehaviour
                         break;
                     case 9:
                         l_WheelButton.onClick.AddListener(delegate {
-                            m_CurrentNPCClass.Reaction(MotusSystem.e_EmotionsState.FEAR, -0.3f);
+                            m_CurrentNPCClass.Reaction(MotusSystem.e_EmotionsState.FEAR, 0.3f);
                             RefreshTitle();
                         });
                         break;
@@ -157,7 +157,7 @@ public class DialogueManager : MonoBehaviour
                         break;
                     case 11:
                         l_WheelButton.onClick.AddListener(delegate {
-                            m_CurrentNPCClass.Reaction(MotusSystem.e_EmotionsState.DISGUST, -0.3f);
+                            m_CurrentNPCClass.Reaction(MotusSystem.e_EmotionsState.DISGUST, 0.3f);
                             RefreshTitle();
                         });
                         break;

@@ -100,7 +100,7 @@ public class Companion : NPC, ITalkable
                 {
                     if (Agent.velocity == Vector3.zero && Agent.remainingDistance < 1f)
                     {
-                        NPCAnimator.SetBool("Idle", true);
+                        NPCAnimator.SetBool(NPCAnimations["Idle"], true);
                         Vector3 RotationVector = Vector3.RotateTowards(transform.forward, House.transform.forward, 5.0F * Time.deltaTime, 0.0F);
                         transform.rotation = Quaternion.LookRotation(RotationVector);
                     }

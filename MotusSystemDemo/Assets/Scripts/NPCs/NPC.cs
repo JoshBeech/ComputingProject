@@ -4,6 +4,7 @@ using MotusSystem;
 
 public abstract class NPC : MonoBehaviour
 {
+    [Header("Base NPC settings")]
     public string Name;
 
     public Transform Head;

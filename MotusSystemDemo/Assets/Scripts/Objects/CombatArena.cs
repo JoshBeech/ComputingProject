@@ -14,16 +14,16 @@ public class CombatArena : MonoBehaviour
     {
         if(CombatInprogress)
         {
-            int l_DeadEnemyCount = 0;
+            int l_DefeatedEnemyCount = 0;
 
             foreach(GameObject l_Enemy in EnemyCombatants)
             {
                 Combat NPCCombat = l_Enemy.GetComponent<Combat>();
-                if (NPCCombat.Dead)
-                    l_DeadEnemyCount++;
+                if (NPCCombat.Dead || NPCCombat.Fleeing)
+                    l_DefeatedEnemyCount++;
             }
 
-            if (l_DeadEnemyCount == EnemyCombatants.Count)
+            if (l_DefeatedEnemyCount == EnemyCombatants.Count)
             {
                 AllEnemiesDefeated = true;
                 CombatInprogress = false;
@@ -34,7 +34,7 @@ public class CombatArena : MonoBehaviour
 
                     if (CombatNPC != null)
                     {
-                        CombatNPC.Engaged = false;
+                        CombatNPC.Disengage();
                     }
                 }
 
@@ -80,6 +80,14 @@ public class CombatArena : MonoBehaviour
                 {
                     CombatNPC.Opponents = FriendlyCombatants;
                     CombatNPC.SetTarget();
+
+                    for (int i = 0; i < EnemyCombatants.Count; i++)
+                    {
+                        if(l_Enemy != EnemyCombatants[i])
+                        {
+                            EnemyCombatants[i].GetComponent<Combat>().NPCDied += CombatNPC.f_NPCDied;
+                        }
+                    }
                 }
             }
 

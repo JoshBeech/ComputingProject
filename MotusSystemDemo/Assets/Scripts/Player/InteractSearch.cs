@@ -54,8 +54,6 @@ public class InteractSearch : MonoBehaviour
 
     void OnTriggerEnter(Collider p_OtherCollider)
     {
-        Debug.Log("Trigger Entered: " + p_OtherCollider.name);
-
         if (p_OtherCollider.tag.Contains("Interact"))
         {
             m_InteractableObjects.Add(p_OtherCollider.name, p_OtherCollider.gameObject);
