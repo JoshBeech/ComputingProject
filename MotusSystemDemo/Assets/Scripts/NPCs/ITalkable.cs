@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 public interface ITalkable : IInteractable
 {
+    DialogueManager IManager { get; set; }
     bool IInDialogue { get; set; }
     Vector3 IDialoguePosition { get; set; }
     List<string> ITextLines { get; set; }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections.Generic;
 using MotusSystem;
 
@@ -6,6 +7,8 @@ public abstract class NPC : MonoBehaviour
 {
     [Header("Base NPC settings")]
     public string Name;
+    public string SkinColour;
+    public GameObject King;
 
     public Transform Head;
     public NavMeshAgent Agent;
@@ -18,22 +21,25 @@ public abstract class NPC : MonoBehaviour
     public Animator NPCAnimator;
     public Dictionary<string, int> NPCAnimations = new Dictionary<string, int>();
 
-
+    
     // Use this for initialization
     protected void Start()
     {
         Name = gameObject.name;
         NPCMotus = new Motus();
 
-        NPCMotus.SetAction(e_EmotionsState.JOY, e_EmotionsState.JOY, "Entry", delegate { SetFace("Happy3"); });
         NPCMotus.SetAction(e_EmotionsState.NEUTRAL, e_EmotionsState.NEUTRAL, "Entry", delegate { SetFace(); });
-        NPCMotus.SetAction(e_EmotionsState.SADNESS, e_EmotionsState.SADNESS, "Entry", delegate { SetFace("Sad"); });
-
+        NPCMotus.SetAction(e_EmotionsState.JOY, e_EmotionsState.SURPRISE, "Entry", delegate { SetFace("Happy3"); });
 
         UpdateEmotions();
         UpdateMood();
 
         NPCAnimator = GetComponentInChildren<Animator>();
+
+        if (King != null)
+        {
+            King.GetComponent<King>().KingRescued += f_KingRescued;
+        }
     }
 
 
@@ -71,15 +77,21 @@ public abstract class NPC : MonoBehaviour
             }
         }
 
-        if (p_FaceName == "")
-        {
+        if (p_FaceName == "")        
             return;
-        }
+        
 
-        GameObject l_NewFace = Instantiate(FaceManager.GetFace(p_FaceName));
+        GameObject l_NewFace = Instantiate(FaceManager.GetFace(SkinColour,p_FaceName));
 
         l_NewFace.transform.SetParent(Head);
         l_NewFace.transform.position = Head.position;
         l_NewFace.transform.localEulerAngles = new Vector3(-90.0f, 0.0f, 0.0f);
+    }
+
+    public void f_KingRescued(object sender, KingRescuedEventArgs e)
+    {
+        Debug.Log("King has been rescued");
+        Reaction(e_EmotionsState.SURPRISE, 1.0f);
+        Reaction(e_EmotionsState.JOY, 1.5f);
     }
 }

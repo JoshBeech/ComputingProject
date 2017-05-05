@@ -15,7 +15,6 @@ namespace MotusSystem
 
         public Sensation(float p_Strength)
         {
-            p_Strength = MathUtilities.Clamp(p_Strength, 1.0f, -1.0f);
             Strength = p_Strength;
         }
     }

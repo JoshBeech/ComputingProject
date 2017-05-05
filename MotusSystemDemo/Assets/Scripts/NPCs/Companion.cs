@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Companion : NPC, ITalkable
 {
     // Interactable variables 
+    public DialogueManager IManager { get; set; }
     public bool IInDialogue { get; set; }
     public Vector3 IDialoguePosition { get; set; }
     public List<string> ITextLines { get; set; }
@@ -32,6 +33,7 @@ public class Companion : NPC, ITalkable
     {
         base.Start();
 
+        IManager = GameObject.Find("DialogueManager").GetComponent<DialogueManager>();
         IInDialogue = false;
         Talking = IInDialogue;
         ITextLines = TextLines;

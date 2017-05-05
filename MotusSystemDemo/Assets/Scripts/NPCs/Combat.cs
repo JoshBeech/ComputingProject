@@ -13,7 +13,8 @@ public class Combat : NPC
     public GameObject Target;
     public int Health = 10;
     public bool Engaged = false;
-    public bool Alert = false;
+    public bool SparringOffense = false;
+    public bool SparringDefence = false;
     public bool Dead = false;
     public bool Fleeing = false;
     public e_EmotionsState DeathFeeling;
@@ -35,13 +36,12 @@ public class Combat : NPC
 
         if (NPCAnimations.ContainsKey("Idle"))
             NPCAnimator.SetBool(NPCAnimations["Idle"], true);
-
-        NPCAnimator.SetBool(NPCAnimations["Relax"], true);
+        
+        if(King == null)
+            NPCAnimator.SetBool(NPCAnimations["Relax"], true);
 
         Dead = false;
         Engaged = false;
-
-        NPCDied += f_NPCDied;
 
         NPCMotus.SetAction(e_EmotionsState.FEAR, e_EmotionsState.FEAR, "Entry", delegate { Flee(); });
         NPCMotus.SetAction(e_EmotionsState.ANGER, e_EmotionsState.ANGER, "Entry", delegate { Enrage(); });
@@ -123,16 +123,29 @@ public class Combat : NPC
                     }
                 }
             }
+            else if(SparringOffense)
+            {
+                if (NPCAnimator.GetBool(NPCAnimations["Attack"]) == false)
+                {
+                    NPCAnimator.SetTrigger(NPCAnimations["Attack"]);
+                }
+            }
+            else if (SparringDefence)
+            {
+                if (NPCAnimator.GetBool(NPCAnimations["Defend"]) == false)
+                {
+                    NPCAnimator.SetBool(NPCAnimations["Defend"], true);
+                }
+            }
         }
     }
-
-
+    
     public void SetTarget()
     {
         int l_RandomIndex = UnityEngine.Random.Range(0, Opponents.Count);
         Target = Opponents[l_RandomIndex];
 
-        if (Target != null && Agent != null)
+        if (Target != null && Agent.enabled == true)
         {
             Agent.destination = Target.transform.position;
             Engaged = true;
@@ -164,23 +177,22 @@ public class Combat : NPC
 
         NPCDiedEventArgs l_args = new NPCDiedEventArgs();
         l_args.Emotion = DeathFeeling;
-        onDeath(l_args);
+        OnDeath(l_args);
     }
 
-    protected virtual void onDeath(NPCDiedEventArgs e)
+    protected virtual void OnDeath(NPCDiedEventArgs e)
     {
         EventHandler<NPCDiedEventArgs> handler = NPCDied;
 
-        if(handler != null)
-        {
+        if(handler != null)        
             handler(this, e);
-        }
+        
     }
 
     public void f_NPCDied(object sender, NPCDiedEventArgs e)
     {
         if(!Dead)
-            Reaction(e.Emotion, 0.2f);
+            Reaction(e.Emotion, 0.15f);
     }
 
     public void Disengage()
