@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Emotions\Emotion.cs" />
-    <Compile Include="FFSM\FuzzyFSM.cs" />
+    <Compile Include="Emotions\FuzzyEmotion.cs" />
     <Compile Include="Moods\Anger.cs" />
     <Compile Include="Moods\Anticipation.cs" />
     <Compile Include="Moods\Disgust.cs" />
@@ -60,6 +60,7 @@
     <Compile Include="Sensation.cs" />
     <Compile Include="Utilities\Utilities.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

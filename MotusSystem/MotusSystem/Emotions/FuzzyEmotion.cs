@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MotusSystem.Emotions;
 
-namespace MotusSystem.FFSM
+namespace MotusSystem.Emotions
 {
     /// <summary>
-    /// Base class for the fuzzy finite-state machines used by the emotion pairs
+    /// Fuzzy finite-state machine.
+    /// Contains 3 emotions and blends between them using 1 - -1 value
     /// </summary>
-    internal class FuzzyFSM
+    internal class FuzzyEmotion
     {
 
         internal enum e_State { NEGATIVE = -1, NEUTRAL = 0, POSITIVE };
@@ -25,12 +25,7 @@ namespace MotusSystem.FFSM
         internal Emotion NeutralEmotion;
         internal Emotion NegativeExtreme;
 
-        public FuzzyFSM()
-        {
-
-        }
-
-        public FuzzyFSM(e_EmotionsState p_PositiveExtreme, e_EmotionsState p_NeutralEmotion, e_EmotionsState p_NegativeExtreme)
+        public FuzzyEmotion(e_EmotionsState p_PositiveExtreme, e_EmotionsState p_NeutralEmotion, e_EmotionsState p_NegativeExtreme)
         {
             PositiveExtreme = new Emotion(p_PositiveExtreme);
             NeutralEmotion = new Emotion(p_NeutralEmotion);
@@ -59,26 +54,32 @@ namespace MotusSystem.FFSM
             SetState();
         }
 
+        /// <summary>
+        /// Sets the current state and emotion of FuzzyEmotion.
+        /// Sets emotion strength based of percentage over the emotion threshold
+        /// </summary>
         public void SetState()
         {
             if (Value >= PositiveBoundary)
             {
                 CurrentState = e_State.POSITIVE;
-                CurrentEmotionalState = PositiveExtreme.EmotionID;
+                CurrentEmotionalState = PositiveExtreme.GetEmotionID();
                 float l_PositiveBoundaryDifference = 1.0f - PositiveBoundary;                
                 PositiveExtreme.Strength = (Value - PositiveBoundary) / l_PositiveBoundaryDifference;
             }
             else if (Value <= NegativeBoundary)
             {
                 CurrentState = e_State.NEGATIVE;
-                CurrentEmotionalState = NegativeExtreme.EmotionID;
+                CurrentEmotionalState = NegativeExtreme.GetEmotionID();
                 float l_NegativeBoundaryDifference = 1.0f + NegativeBoundary;
                 NegativeExtreme.Strength = Math.Abs((Value - NegativeBoundary) / l_NegativeBoundaryDifference);
             }
             else
             {
+                // Neutral boundaries are between the threshoolds where a fuzzy value of 0 is the strongest emotion
+                // Since boundaries are mirrored the calcuation double the fuzzy value and subracts from the differnce between thresholds
                 CurrentState = e_State.NEUTRAL;
-                CurrentEmotionalState = NeutralEmotion.EmotionID;
+                CurrentEmotionalState = NeutralEmotion.GetEmotionID();
                 float l_NeutralBoundaryDifference = PositiveBoundary - NegativeBoundary;
                 NeutralEmotion.Strength = (l_NeutralBoundaryDifference - (Math.Abs(Value)*2) )/ l_NeutralBoundaryDifference;
             }

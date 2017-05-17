@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MotusSystem.FFSM;
+using MotusSystem.Emotions;
 using MotusSystem.Moods;
 
 namespace MotusSystem
 {
-    // This class is what will be on NPCs
-    // It needs to contain fuzzy emotions, moods, 
-    // know about feelings (past events) and mannerims? 
     public enum e_EmotionsState
     {
         JOY = 0, CONTENT, SADNESS,
@@ -19,14 +16,22 @@ namespace MotusSystem
         NEUTRAL
     };
 
+
+    /// <summary>
+    /// Only public class
+    /// Enables object that holds to have an emotional system
+    /// Can be queried for current emotional status, in string[] format.
+    /// Create sensations,
+    /// Set mood (Not recommened for natural results)
+    /// </summary>
     public class Motus
     {
-        internal List<FuzzyFSM> FuzzyEmotions = new List<FuzzyFSM>();
+        internal List<FuzzyEmotion> FuzzyEmotions = new List<FuzzyEmotion>();
 
-        internal FuzzyFSM JoySadnessPair;
-        internal FuzzyFSM AnticipationSurprisePair;
-        internal FuzzyFSM AngerFearPair;
-        internal FuzzyFSM TrustDisgustPair;
+        internal FuzzyEmotion JoySadnessPair;
+        internal FuzzyEmotion AnticipationSurprisePair;
+        internal FuzzyEmotion AngerFearPair;
+        internal FuzzyEmotion TrustDisgustPair;
 
         internal MoodController MoodManager;
 
@@ -38,10 +43,10 @@ namespace MotusSystem
 
         private void CreatePairs()
         {
-            JoySadnessPair = new FuzzyFSM(e_EmotionsState.JOY, e_EmotionsState.CONTENT, e_EmotionsState.SADNESS);
-            AnticipationSurprisePair = new FuzzyFSM(e_EmotionsState.ANTICIPATION, e_EmotionsState.RELAX, e_EmotionsState.SURPRISE);
-            AngerFearPair = new FuzzyFSM(e_EmotionsState.ANGER, e_EmotionsState.CALM, e_EmotionsState.FEAR);
-            TrustDisgustPair = new FuzzyFSM(e_EmotionsState.TRUST, e_EmotionsState.DISTANT, e_EmotionsState.DISGUST);
+            JoySadnessPair = new FuzzyEmotion(e_EmotionsState.JOY, e_EmotionsState.CONTENT, e_EmotionsState.SADNESS);
+            AnticipationSurprisePair = new FuzzyEmotion(e_EmotionsState.ANTICIPATION, e_EmotionsState.RELAX, e_EmotionsState.SURPRISE);
+            AngerFearPair = new FuzzyEmotion(e_EmotionsState.ANGER, e_EmotionsState.CALM, e_EmotionsState.FEAR);
+            TrustDisgustPair = new FuzzyEmotion(e_EmotionsState.TRUST, e_EmotionsState.DISTANT, e_EmotionsState.DISGUST);
 
             FuzzyEmotions.Add(JoySadnessPair);
             FuzzyEmotions.Add(AnticipationSurprisePair);
@@ -82,6 +87,11 @@ namespace MotusSystem
             return l_EmotionValues;
         }
 
+        /// <summary>
+        /// Create a sensation to naturally alter the system
+        /// </summary>
+        /// <param name="p_EmotionTarget">Which emotion to target</param>
+        /// <param name="p_Strength">Strength of sensation, suggest less than 0.4 for average reactions and 1.5 or higher for large reactions</param>
         public void CreateSensation(e_EmotionsState p_EmotionTarget, float p_Strength)
         {
             Sensation l_NewSensation;
@@ -140,10 +150,10 @@ namespace MotusSystem
         /// Adjust emotion values slightly, 
         /// used after receiving a sensation to highlight changes 
         /// </summary>
-        /// <param name="p_Emotions"></param>
-        private void DeteriorateEmotions(FuzzyFSM p_AlteredEmotion = null)
+        /// <param name="p_AlteredEmotion">Which emotion has just been updated and so not to be deteriorated</param>
+        private void DeteriorateEmotions(FuzzyEmotion p_AlteredEmotion = null)
         {
-            foreach(FuzzyFSM l_Emotion in FuzzyEmotions)
+            foreach(FuzzyEmotion l_Emotion in FuzzyEmotions)
             {
                 if (l_Emotion != p_AlteredEmotion)
                 {
@@ -161,7 +171,10 @@ namespace MotusSystem
             }
         }
 
-
+        /// <summary>
+        /// Foribly set the mood of the system, not recommended for natural results
+        /// </summary>
+        /// <param name="p_MoodEmotion"></param>
         public void SetMood(e_EmotionsState p_MoodEmotion)
         {
             switch (p_MoodEmotion)
@@ -202,11 +215,16 @@ namespace MotusSystem
                     break;
             }
 
-            MoodManager.UpdateCurrentMood(new List<FuzzyFSM> { JoySadnessPair, AnticipationSurprisePair, AngerFearPair, TrustDisgustPair });
+            MoodManager.UpdateCurrentMood(FuzzyEmotions);
         }
 
-
-        // TODO: Overload to take just one emotion allowing to give same action to all states of one mood
+        /// <summary>
+        /// Set functional to trigger for a certain mood
+        /// </summary>
+        /// <param name="p_PrimaryEmotion"></param>
+        /// <param name="p_SecondaryEmotion"></param>
+        /// <param name="p_FunctionKey">Name for the function to be called by, use either Enter or Exit for current build</param>
+        /// <param name="p_Function"></param>
         public void SetAction(e_EmotionsState p_PrimaryEmotion, e_EmotionsState p_SecondaryEmotion, string p_FunctionKey, Action p_Function)
         {
             //Find the target state using the primary and secondary emotions

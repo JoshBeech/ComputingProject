@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MotusSystem.FFSM;
+using MotusSystem.Emotions;
 
 namespace MotusSystem.Moods
 {
@@ -15,7 +15,6 @@ namespace MotusSystem.Moods
         private Mood CurrentMood = new Mood();
         private State CurrentState = new State();
         private Dictionary<e_EmotionsState, Mood> m_Moods = new Dictionary<e_EmotionsState, Mood>();
-        internal List<FuzzyFSM> SortedEmotions = new List<FuzzyFSM>();
 
         public MoodController()
         {
@@ -48,14 +47,19 @@ namespace MotusSystem.Moods
             return m_Moods[p_Emotion];
         }
 
-        // Takes/gathers input from all FFSMs - better name?
-        public void UpdateCurrentMood(List<FuzzyFSM> p_FuzzyEmotions)
+        /// <summary>
+        /// Updates the current mood based of the fuzzy emotions.
+        /// Selects the strongest non-neutral emotion as primary mood,
+        /// passes remaining emotions to primary mood to blend
+        /// </summary>
+        /// <param name="p_FuzzyEmotions"></param>
+        public void UpdateCurrentMood(List<FuzzyEmotion> p_FuzzyEmotions)
         {
-            SortedEmotions.Clear();
+            List<FuzzyEmotion> SortedEmotions = new List<FuzzyEmotion>();
 
-            foreach (FuzzyFSM l_FuzzyEmotion in p_FuzzyEmotions)
+            foreach (FuzzyEmotion l_FuzzyEmotion in p_FuzzyEmotions)
             {
-                if (l_FuzzyEmotion.CurrentState != FuzzyFSM.e_State.NEUTRAL)
+                if (l_FuzzyEmotion.CurrentState != FuzzyEmotion.e_State.NEUTRAL)
                 {
                     SortedEmotions.Add(l_FuzzyEmotion);
                 }

@@ -3,12 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MotusSystem.FFSM;
+using MotusSystem.Emotions;
 
 namespace MotusSystem.Moods
 {
     /// <summary>
-    /// Collection of states - combinations of emotions 
+    /// Base class for all moods.
+    /// Has all shared mood functionality:
+    /// Blending primary and secondary emotions
+    /// Setting new secondary emotion if required and blended strength
+    /// Calling enter and exit functionality for states.
     /// </summary>
     internal class Mood
     {
@@ -23,10 +27,12 @@ namespace MotusSystem.Moods
         /// <summary>
         /// Compare value of other emotions to strength of the mood
         /// If highest is within a threshold use to plan to another state
-        /// Otherwise state will be whatever the mood is
+        /// Otherwise state will be whatever the mood is.
         /// </summary>
         /// <param name="p_RemainingEmotions"></param>
-        public void BlendMood(List<FuzzyFSM> p_RemainingEmotions, ref State p_CurrentAgentState)
+        /// <param name="p_CurrentAgentState">Reference to current mood state, 
+        /// required to perform accurate comparision between new/current mood state and state of mood controller</param>
+        public void BlendMood(List<FuzzyEmotion> p_RemainingEmotions, ref State p_CurrentAgentState)
         {
             if (p_RemainingEmotions.Count <= 1)
             {

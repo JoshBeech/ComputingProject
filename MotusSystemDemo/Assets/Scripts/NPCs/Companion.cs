@@ -17,14 +17,18 @@ public class Companion : NPC, ITalkable
     public List<string> WheelOptions1 = new List<string>();
     public List<string> WheelOptions2 = new List<string>();
 
-    // Companion Variables
+    [Header("Companion NPC Attributes")]
     public GameObject Player;
     //public NavMeshAgent Agent;
     public Transform House;
     public bool CompanionActive = true;
     public bool InsideWall = true;
 
+    public float[] WalkSpeedSettings;
+    public float[] SprintSpeedSettings;
+
     private PlayerController m_PlayerController;
+    private Transform Target;
     public Combat CombatScript;
 
 
@@ -47,6 +51,13 @@ public class Companion : NPC, ITalkable
         Agent.destination = Player.transform.position;
         House = GameObject.Find("CompanionHouse").transform;
 
+        WalkSpeedSettings = new float[3];
+        SprintSpeedSettings = new float[3];
+
+        SetMovementModeParameters("Default");
+
+        FollowPlayer();
+
         CombatScript = GetComponent<Combat>();
         CombatScript.enabled = false;
 
@@ -54,16 +65,17 @@ public class Companion : NPC, ITalkable
         NPCAnimator.SetBool(NPCAnimations["Relax"], false);
         NPCAnimator.SetBool(NPCAnimations["Idle"], true);
 
-        NPCMotus.SetAction(MotusSystem.e_EmotionsState.ANGER, MotusSystem.e_EmotionsState.DISGUST, "Entry", delegate { LeavePlayer(); });
-        NPCMotus.SetAction(MotusSystem.e_EmotionsState.ANGER, MotusSystem.e_EmotionsState.DISGUST, "Exit", delegate { FollowPlayer(); });
+        NPCMotus.SetAction(MotusSystem.e_EmotionsState.ANGER, MotusSystem.e_EmotionsState.DISGUST, "Entry", delegate { LeavePlayer(); SetFace("Angry"); });
+        NPCMotus.SetAction(MotusSystem.e_EmotionsState.ANGER, MotusSystem.e_EmotionsState.DISGUST, "Exit", delegate { FollowPlayer(); SetFace(); });
 
         NPCMotus.SetAction(MotusSystem.e_EmotionsState.SADNESS, MotusSystem.e_EmotionsState.FEAR, "Entry", 
-            delegate { ChangeSteering(1.0f, 1.0f, 2.0f);
+            delegate {
+                SetMovementModeParameters("Sad");
                 SetFace("Sad");
         });
         NPCMotus.SetAction(MotusSystem.e_EmotionsState.SADNESS, MotusSystem.e_EmotionsState.FEAR, "Exit",
     delegate {
-        ChangeSteering(2.0f, 2.0f, 4.0f);
+        SetMovementModeParameters("Default");
         SetFace();
     });
     }
@@ -75,38 +87,42 @@ public class Companion : NPC, ITalkable
         {
             if (!IInDialogue)
             {
-                if (CompanionActive)
+                if (Vector3.Distance(transform.position, Target.position) > Agent.stoppingDistance - 1.0f)
                 {
-                    if (Vector3.Distance(transform.position, Player.transform.position) > Agent.stoppingDistance - 1.0f)
-                    {
-                        Agent.destination = Player.transform.position;
+                    Agent.destination = Target.position;
+                }
 
-                        if (m_PlayerController.IsMoving && m_PlayerController.IsSprinting)
-                        {
-                            //ChangeSteering(4.0f, 2.0f, 6.0f);                        
-                        }
-                        else if (m_PlayerController.IsMoving && !m_PlayerController.IsSprinting)
-                        {
-                            //ChangeSteering(2.0f, 2.0f, 4.0f);
-                        }
-                    }
+                if (Vector3.Distance(transform.position, Target.position) > 5.0f)
+                    SetMovementMode(true);
+                else if (Vector3.Distance(transform.position, Target.position) < Agent.stoppingDistance)
+                    SetMovementMode(false);
 
-                    if (Agent.velocity == Vector3.zero)
-                    {
-                        NPCAnimator.SetBool(NPCAnimations["Walk"], false);
-                        NPCAnimator.SetBool(NPCAnimations["Run"], false);
-                    }
-
+                if (Agent.velocity == Vector3.zero)
+                {
+                    NPCAnimator.SetBool(NPCAnimations["Walk"], false);
+                    NPCAnimator.SetBool(NPCAnimations["Run"], false);
+                }
+                else if (Agent.velocity.magnitude < 3.0f)
+                {
+                    NPCAnimator.SetBool(NPCAnimations["Walk"], true);
+                    NPCAnimator.SetBool(NPCAnimations["Run"], false);
                 }
                 else
                 {
+                    NPCAnimator.SetBool(NPCAnimations["Walk"], false);
+                    NPCAnimator.SetBool(NPCAnimations["Run"], true);
+                }
+
+                if (!CompanionActive)
+                {
+                    Agent.stoppingDistance = 1.0f;
+
                     if (Agent.velocity == Vector3.zero && Agent.remainingDistance < 1f)
-                    {
-                        NPCAnimator.SetBool(NPCAnimations["Idle"], true);
+                    {                     
                         Vector3 RotationVector = Vector3.RotateTowards(transform.forward, House.transform.forward, 5.0F * Time.deltaTime, 0.0F);
                         transform.rotation = Quaternion.LookRotation(RotationVector);
                     }
-                }
+                }                
             }
             else
             {
@@ -151,37 +167,59 @@ public class Companion : NPC, ITalkable
     public void FollowPlayer()
     {
         CompanionActive = true;
+        Target = Player.transform;
         m_PlayerController.Companion = gameObject;
-        Agent.destination = Player.transform.position;
+        Agent.destination = Target.position;
         Agent.stoppingDistance = 4.0f;
     }
 
     public void LeavePlayer()
     {
         CompanionActive = false;
+        Target = House;
         m_PlayerController.Companion = null;
         // Check if outside castle wall,
         // if yes head to wall then warp inside then head to house
-        Agent.destination = House.position;
-        Agent.stoppingDistance = 1.0f;
         Agent.Stop();
+        Agent.destination = Target.position;
+        Agent.stoppingDistance = 1.0f;
     }
 
-    public void ChangeSteering(float p_NewSpeed, float p_NewAcceleration, float p_NewStoppingDistance)
+    public void SetMovementModeParameters(string p_SpeedMode)
     {
-        Agent.speed = p_NewSpeed;
-        Agent.acceleration = p_NewAcceleration;
-        Agent.stoppingDistance = p_NewStoppingDistance;
+        if (p_SpeedMode.Equals("Default"))
+        {
+            WalkSpeedSettings[0] = 2.0f;
+            WalkSpeedSettings[1] = 3.0f;
+            WalkSpeedSettings[2] = 4.0f;
 
-        if(Agent.speed > 3.0f && !NPCAnimator.GetBool("Run"))
-        {
-            NPCAnimator.SetBool("Walk", false);
-            NPCAnimator.SetBool("Run", true);
+            SprintSpeedSettings[0] = 5.0f;
+            SprintSpeedSettings[1] = 4.0f;
+            SprintSpeedSettings[2] = 6.0f;
         }
-        else if(Agent.speed > 0.0f && !NPCAnimator.GetBool("Walk"))
+        else if (p_SpeedMode.Equals("Sad"))
         {
-            NPCAnimator.SetBool("Walk", true);
-            NPCAnimator.SetBool("Run", false);
+            WalkSpeedSettings[0] = 1.0f;
+            WalkSpeedSettings[1] = 1.0f;
+            WalkSpeedSettings[2] = 2.0f;
+
+            SprintSpeedSettings = WalkSpeedSettings;
+        }
+    }
+
+    public void SetMovementMode(bool p_IsSprinting)
+    {
+        if(p_IsSprinting)
+        {
+            Agent.speed = SprintSpeedSettings[0];
+            Agent.acceleration = SprintSpeedSettings[1];
+            Agent.stoppingDistance = SprintSpeedSettings[2];
+        }
+        else
+        {
+            Agent.speed = WalkSpeedSettings[0];
+            Agent.acceleration = WalkSpeedSettings[1];
+            Agent.stoppingDistance = WalkSpeedSettings[2];
         }
     }
 

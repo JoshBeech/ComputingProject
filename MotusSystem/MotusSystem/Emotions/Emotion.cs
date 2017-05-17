@@ -6,14 +6,13 @@ using System.Text;
 namespace MotusSystem.Emotions
 {
     /// <summary>
-    /// Base class for all individual emotions, 
-    /// will contain a state machine (created in each emotion) that decides the actions of the AI
+    /// Reflects the value of an emotion based upon the ID set on construction.
+    /// Used in combination with fuzzy emotion to create the emotion pairs
     /// </summary>
     public class Emotion
     {
         public float Strength;
-        public e_EmotionsState EmotionID;
-        public Dictionary<float, Action> EmotionActions = new Dictionary<float, Action>();
+        private e_EmotionsState EmotionID;
 
         public Emotion(e_EmotionsState p_EmotionName, float p_StartStrength = 0.0f)
         {
@@ -21,6 +20,9 @@ namespace MotusSystem.Emotions
             Strength = p_StartStrength;
         }
 
-        // add state mnachine
+        public e_EmotionsState GetEmotionID()
+        {
+            return EmotionID;
+        }
     }
 }

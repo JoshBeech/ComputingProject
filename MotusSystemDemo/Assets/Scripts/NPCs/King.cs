@@ -65,7 +65,7 @@ public class King : NPC, ITalkable
         KingRescuedEventArgs l_Args = new KingRescuedEventArgs();
         OnRescue(l_Args);
         transform.SetParent(Temple);
-        transform.localPosition = new Vector3(4.0f, 0, 4.0f);
+        transform.localPosition = new Vector3(5.0f, 0, 4.0f);
         transform.localEulerAngles = Vector3.zero;
     }
 
