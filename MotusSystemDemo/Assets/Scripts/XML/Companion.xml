@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Dialogue>
+  <Set Mood="Neutral">
+    <Text>Hi, what's up</Text>
+    <Text>Let's get moving</Text>
+
+    <WheelOptions Layer="">
+      <Option Position="0" Case="0">
+        <Text>Chat</Text>
+        <Emotion></Emotion>
+      </Option>
+      <Option Position="1" Case="0">
+        <Text>End dialogue</Text>
+        <Emotion></Emotion>
+      </Option>
+      <Option Position="0" Case="0">
+        <Text></Text>
+        <Emotion></Emotion>
+      </Option>
+      <Option Position="0" Case="0">
+        <Text></Text>
+        <Emotion></Emotion>
+      </Option>
+      <Option Position="0" Case="0">
+        <Text></Text>
+        <Emotion></Emotion>
+      </Option>
+      <Option Position="0" Case="0">
+        <Text></Text>
+        <Emotion></Emotion>
+      </Option>
+    </WheelOptions>
+  </Set>
+  <Set Mood="">
+    <Text></Text>
+    <Text></Text>
+
+    <Option Position="0" Case="0">
+      <Text></Text>
+      <Emotion></Emotion>
+    </Option>
+    <Option Position="0" Case="0">
+      <Text></Text>
+      <Emotion></Emotion>
+    </Option>
+    <Option Position="0" Case="0">
+      <Text></Text>
+      <Emotion></Emotion>
+    </Option>
+    <Option Position="0" Case="0">
+      <Text></Text>
+      <Emotion></Emotion>
+    </Option>
+    <Option Position="0" Case="0">
+      <Text></Text>
+      <Emotion></Emotion>
+    </Option>
+  </Set>
+  <Set Mood="">
+    <Text></Text>
+    <Text></Text>
+
+    <Option Position="0" Case="0">
+      <Text></Text>
+      <Emotion></Emotion>
+    </Option>
+    <Option Position="0" Case="0">
+      <Text></Text>
+      <Emotion></Emotion>
+    </Option>
+    <Option Position="0" Case="0">
+      <Text></Text>
+      <Emotion></Emotion>
+    </Option>
+    <Option Position="0" Case="0">
+      <Text></Text>
+      <Emotion></Emotion>
+    </Option>
+    <Option Position="0" Case="0">
+      <Text></Text>
+      <Emotion></Emotion>
+    </Option>
+  </Set>
+</Dialogue>
