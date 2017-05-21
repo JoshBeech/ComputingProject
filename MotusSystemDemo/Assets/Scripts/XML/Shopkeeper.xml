@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Dialogue>
+  <Set Mood="Neutral">
+    <Text>Welcome to my shop, how can I help you?</Text>
+    <Text>Thank you for your purchase</Text>
+
+    <WheelOptions Layer="1">
+      <Option Position="0" Case="1">
+        <Text>Buy Item</Text>
+      </Option>
+      <Option Position="2" Case="2">
+        <Text>Leave</Text>
+      </Option>
+      <Option Position="5" Case="3">
+        <Text>Extra Actions</Text>
+      </Option>
+    </WheelOptions>
+    
+    <WheelOptions Layer="2">
+      <Option Position="0" Case="4">
+        <Text>Do Favour</Text>
+        <Emotion>JOY</Emotion>
+      </Option>
+      <Option Position="1" Case="4">
+        <Text>Compliment</Text>
+        <Emotion>JOY</Emotion>
+      </Option>
+      <Option Position="3" Case="4">
+        <Text>Shout At</Text>
+        <Emotion>ANGER</Emotion>
+      </Option>
+      <Option Position="5" Case="3">
+        <Text>Default Actions</Text>
+      </Option>
+    </WheelOptions>
+  </Set>
+
+  <Set Mood="Happy">
+    <Text>Thank you so much, I'd like to offer you discounted prices</Text>
+
+    <WheelOptions Layer="1">
+      <Option Position="0" Case="1">
+        <Text>Buy Item</Text>
+      </Option>
+      <Option Position="2" Case="2">
+        <Text>Leave</Text>
+      </Option>
+      <Option Position="5" Case="3">
+        <Text>Extra Actions</Text>
+      </Option>
+    </WheelOptions>
+
+    <WheelOptions Layer="2">
+      <Option Position="3" Case="4">
+        <Text>Shout At</Text>
+        <Emotion>ANGER</Emotion>
+      </Option>
+      <Option Position="5" Case="3">
+        <Text>Default Actions</Text>
+      </Option>
+    </WheelOptions>
+  </Set>
+
+  <Set Mood="Happy">
+    <Text>You are no longer welcome at my shop. \n\n I think it's time for you to leave.</Text>
+
+    <WheelOptions Layer="1">
+      <Option Position="2" Case="2">
+        <Text>Leave</Text>
+      </Option>
+      <Option Position="5" Case="3">
+        <Text>Apologise</Text>
+        <Emotion>FEAR</Emotion>
+      </Option>
+    </WheelOptions>
+  </Set>
+</Dialogue>

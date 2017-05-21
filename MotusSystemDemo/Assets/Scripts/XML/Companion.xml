@@ -5,34 +5,59 @@
     <Text>Hi, what's up</Text>
     <Text>Let's get moving</Text>
 
-    <WheelOptions Layer="">
-      <Option Position="0" Case="0">
+    <WheelOptions Layer="1">
+      <Option Position="0" Case="1">
         <Text>Chat</Text>
         <Emotion></Emotion>
       </Option>
-      <Option Position="1" Case="0">
+      <Option Position="1" Case="2">
         <Text>End dialogue</Text>
         <Emotion></Emotion>
       </Option>
-      <Option Position="0" Case="0">
-        <Text></Text>
-        <Emotion></Emotion>
+      <Option Position="2" Case="4">
+        <Text>Share Secret</Text>
+        <Emotion>TRUST</Emotion>
       </Option>
-      <Option Position="0" Case="0">
-        <Text></Text>
-        <Emotion></Emotion>
+      <Option Position="3" Case="4">
+        <Text>Compliment</Text>
+        <Emotion>JOY</Emotion>
       </Option>
-      <Option Position="0" Case="0">
-        <Text></Text>
-        <Emotion></Emotion>
+      <Option Position="4" Case="4">
+        <Text>Insult</Text>
+        <Emotion>SADNESS</Emotion>
       </Option>
-      <Option Position="0" Case="0">
-        <Text></Text>
-        <Emotion></Emotion>
+      <Option Position="5" Case="3">
+        <Text>More</Text>
+      </Option>
+    </WheelOptions>
+    <WheelOptions Layer="2">
+      <Option Position="0" Case="1">
+        <Text>Startle</Text>
+        <Emotion>SURPRISE</Emotion>
+      </Option>
+      <Option Position="1" Case="2">
+        <Text>Make Nervous</Text>
+        <Emotion>ANTICIPATION</Emotion>
+      </Option>
+      <Option Position="2" Case="4">
+        <Text>Betray</Text>
+        <Emotion>DISGUST</Emotion>
+      </Option>
+      <Option Position="3" Case="4">
+        <Text>Bully</Text>
+        <Emotion>ANGER</Emotion>
+      </Option>
+      <Option Position="4" Case="4">
+        <Text>Yell At</Text>
+        <Emotion>FEAR</Emotion>
+      </Option>
+      <Option Position="5" Case="3">
+        <Text>Back</Text>
       </Option>
     </WheelOptions>
   </Set>
-  <Set Mood="">
+  
+  <Set Mood="Angry">
     <Text></Text>
     <Text></Text>
 
@@ -57,29 +82,5 @@
       <Emotion></Emotion>
     </Option>
   </Set>
-  <Set Mood="">
-    <Text></Text>
-    <Text></Text>
-
-    <Option Position="0" Case="0">
-      <Text></Text>
-      <Emotion></Emotion>
-    </Option>
-    <Option Position="0" Case="0">
-      <Text></Text>
-      <Emotion></Emotion>
-    </Option>
-    <Option Position="0" Case="0">
-      <Text></Text>
-      <Emotion></Emotion>
-    </Option>
-    <Option Position="0" Case="0">
-      <Text></Text>
-      <Emotion></Emotion>
-    </Option>
-    <Option Position="0" Case="0">
-      <Text></Text>
-      <Emotion></Emotion>
-    </Option>
-  </Set>
+  
 </Dialogue>
