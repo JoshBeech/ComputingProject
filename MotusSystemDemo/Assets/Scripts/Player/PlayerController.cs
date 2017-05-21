@@ -110,7 +110,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            m_Animator.SetBool(m_Animations["Walk"], false);
+            IsMoving = false;
         }
     }
 

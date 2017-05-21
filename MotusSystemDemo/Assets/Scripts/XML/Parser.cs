@@ -1,15 +1,12 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Xml;
+using System.Collections.Generic;
 
-public class Parser : MonoBehaviour {
+public class Parser
+{
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    public static void GetDialogue(XmlDocument p_DialogueDocument, DialogueSet p_Dialogue, string p_SetToGet)
+    {
+        // Search xml document for set which matches string
+        // load each set of children into the dialogue set
+    }
 }

@@ -1,1 +1,84 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Dialogue>
+  <Set Mood="Neutral">
+    <Text>hi there, I have a quest for you. \n\n Would you like to hear more?</Text>
+    <Text>Our King has been captured, will you go rescue him?</Text>
+
+    <WheelOptions Layer="1">
+      <Option Position="0" Case="1">
+        <Text>Talk</Text>
+      </Option>
+      <Option Position="1" Case="4">
+        <Text>Accept</Text>
+        <Emotion Strength="1.0">JOY</Emotion>
+      </Option>
+      <Option Position="2" Case="2">
+        <Text>Leave</Text>
+      </Option>
+      <Option Position="3" Case="4">
+        <Text>Refuse</Text>
+        <Emotion Strength="0.3">SADNESS</Emotion>
+      </Option>
+      <Option Position="4" Case="4">
+        <Text>Harsh Refuse</Text>
+        <Emotion Strength="1.0">ANGER</Emotion>
+      </Option>
+    </WheelOptions>
+  </Set>
+  
+  <Set Mood="Happy">
+    <Text>Thank you so much, please hurry</Text>
+
+    <WheelOptions Layer="1">
+      <Option Position="0" Case="2">
+        <Text>Leave</Text>
+      </Option>
+    </WheelOptions>
+  </Set>
+
+  <Set Mood="Sad">
+    <Text>Please return if you reconsider</Text>
+    <Text>Help us, you're our only hope</Text>
+
+    <WheelOptions Layer="1">
+      <Option Position="2" Case="2">
+        <Text>Talk</Text>
+      </Option>
+      <Option Position="2" Case="2">
+        <Text>Leave</Text>
+      </Option>
+      <Option Position="3" Case="4">
+        <Text>Accept</Text>
+        <Emotion Strength="1.5">JOY</Emotion>
+      </Option>
+    </WheelOptions>
+  </Set>
+
+  <Set Mood="Angered">
+    <Text>Well no need to be so rude.</Text>
+    <Text>I think it's time for you to leave</Text>
+
+    <WheelOptions Layer="1">
+      <Option Position="0" Case="1">
+        <Text>Talk</Text>
+      </Option>
+      <Option Position="2" Case="2">
+        <Text>Leave</Text>
+      </Option>
+      <Option Position="3" Case="4">
+        <Text>Apologise</Text>
+        <Emotion Strength="1.0">FEAR</Emotion>
+      </Option>
+    </WheelOptions>
+  </Set>
+
+  <Set Mood="Delighted">
+    <Text>You saved the King \n\n We are eternally grateful.</Text>
+
+    <WheelOptions Layer="1">
+      <Option Position="2" Case="2">
+        <Text>Leave</Text>
+      </Option>
+    </WheelOptions>
+  </Set>
+</Dialogue>
