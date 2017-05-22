@@ -146,14 +146,10 @@ public class Companion : NPC, ITalkable
 
         PlayerController l_PlayerController = p_Player.GetComponent<PlayerController>();
 
-        StartCoroutine(l_PlayerController.SwapCamera());
+        StartCoroutine(l_PlayerController.StartDialogue(IDialoguePosition, new Vector3(transform.position.x, 0.0f, transform.position.z)));
         l_PlayerController.TheDialogueManager.StartDialogue(this, this);
         IInDialogue = true;
-        Talking = IInDialogue;
-        
-        // TODO: link to after camera turns off
-        p_Player.transform.position = IDialoguePosition;
-        p_Player.transform.LookAt(new Vector3(transform.position.x, 0.0f, transform.position.z));
+        Talking = IInDialogue;      
         l_PlayerController.CanMove = false;
     }
 

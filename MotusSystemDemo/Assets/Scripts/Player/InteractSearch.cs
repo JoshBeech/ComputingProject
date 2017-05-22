@@ -24,7 +24,6 @@ public class InteractSearch : MonoBehaviour
     {
         if (m_InteractableObjects.Count > 0)
         {
-
             RaycastHit l_Hit = new RaycastHit();
 
             if (Physics.Raycast(transform.position, transform.forward, out l_Hit, m_SphereCollider.radius, InteractionLayerMask))
@@ -55,6 +54,17 @@ public class InteractSearch : MonoBehaviour
                 }
             }
 
+        }
+        else
+        {
+            if (InteractPrompt.enabled)
+                InteractPrompt.enabled = false;
+
+            if (m_PlayerController.CanInteract)
+            {
+                m_PlayerController.CanInteract = false;
+                m_PlayerController.InteractableObject = null;
+            }
         }
     }
 

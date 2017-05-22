@@ -6,28 +6,29 @@ public class CombatArena : MonoBehaviour
     public List<GameObject> EnemyCombatants = new List<GameObject>();
     public List<GameObject> FriendlyCombatants = new List<GameObject>();
     public bool AllEnemiesDefeated = false;
+    int DefeatedEnemyCount = 0;
 
     private bool CombatInprogress = false;
 
 
     void Update()
     {
-        if(CombatInprogress)
+        if (CombatInprogress)
         {
-            int l_DefeatedEnemyCount = 0;
+            DefeatedEnemyCount = 0;
 
-            foreach(GameObject l_Enemy in EnemyCombatants)
+            foreach (GameObject l_Enemy in EnemyCombatants)
             {
                 Combat NPCCombat = l_Enemy.GetComponent<Combat>();
                 if (NPCCombat.Dead || NPCCombat.Fleeing)
-                    l_DefeatedEnemyCount++;
+                    DefeatedEnemyCount++;
             }
 
-            if (l_DefeatedEnemyCount == EnemyCombatants.Count)
+            if (DefeatedEnemyCount == EnemyCombatants.Count)
             {
                 AllEnemiesDefeated = true;
                 CombatInprogress = false;
-                
+
                 foreach (GameObject l_Friendly in FriendlyCombatants)
                 {
                     Combat CombatNPC = l_Friendly.GetComponent<Combat>();
@@ -48,7 +49,7 @@ public class CombatArena : MonoBehaviour
     // Tell each combatant to pick a target
     void OnTriggerEnter(Collider p_Collider)
     {
-        if(p_Collider.gameObject.name == "Player" && !CombatInprogress)
+        if (p_Collider.gameObject.name == "Player" && !CombatInprogress && !AllEnemiesDefeated)
         {
             PlayerController l_Player = p_Collider.gameObject.GetComponent<PlayerController>();
 
@@ -58,18 +59,18 @@ public class CombatArena : MonoBehaviour
                     FriendlyCombatants.Add(l_Player.Companion);
             }
 
-            foreach(GameObject l_Friendly in FriendlyCombatants)
+            foreach (GameObject l_Friendly in FriendlyCombatants)
             {
                 if (l_Friendly == l_Player.Companion)
                     l_Player.Companion.GetComponent<Companion>().EnterCombat();
 
                 Combat CombatNPC = l_Friendly.GetComponent<Combat>();
-                
-                if(CombatNPC != null)
+
+                if (CombatNPC != null)
                 {
                     CombatNPC.Opponents = EnemyCombatants;
                     CombatNPC.SetTarget();
-                }               
+                }
             }
 
             foreach (GameObject l_Enemy in EnemyCombatants)
@@ -83,7 +84,7 @@ public class CombatArena : MonoBehaviour
 
                     for (int i = 0; i < EnemyCombatants.Count; i++)
                     {
-                        if(l_Enemy != EnemyCombatants[i])
+                        if (l_Enemy != EnemyCombatants[i])
                         {
                             EnemyCombatants[i].GetComponent<Combat>().NPCDied += CombatNPC.f_NPCDied;
                         }

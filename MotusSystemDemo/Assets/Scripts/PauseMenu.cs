@@ -8,6 +8,7 @@ public class PauseMenu : MonoBehaviour
     public PlayerController Player;
     public Button RestartButton;
     public Button ResumeButton;
+    public Button ExitButton;
 
     private CanvasGroup MenuItems;
 
@@ -17,6 +18,7 @@ public class PauseMenu : MonoBehaviour
         MenuItems = GetComponentInChildren<CanvasGroup>();
         RestartButton.onClick.AddListener(delegate { Restart(); });
         ResumeButton.onClick.AddListener(delegate { Resume(); });
+        ExitButton.onClick.AddListener(delegate { Exit(); });
         MenuItems.interactable = false;
         MenuItems.alpha = 0;
     }
@@ -37,5 +39,10 @@ public class PauseMenu : MonoBehaviour
         MenuItems.interactable = false;
         MenuItems.alpha = 0;
         Player.enabled = true;
+    }
+
+    void Exit()
+    {
+        Application.Quit();
     }
 }

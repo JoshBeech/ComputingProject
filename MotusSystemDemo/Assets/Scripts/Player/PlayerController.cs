@@ -120,9 +120,28 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public IEnumerator StartDialogue(Vector3 p_DialoguePosition, Vector3 p_LookTarget)
+    {
+        // Turn off camera1
+        // move player
+        // turn on camera2
+
+        if (!TopDownCamera.GetComponent<CameraController>().IsFading)
+            TopDownCamera.GetComponent<CameraController>().FadeOut();
+
+        yield return new WaitForSeconds(1.0f);
+
+        TopDownCamera.SetActive(false);
+        transform.position = p_DialoguePosition;
+        transform.LookAt(p_LookTarget);
+        
+        ShoulderCamera.SetActive(true);
+        if (!ShoulderCamera.GetComponent<CameraController>().IsFading)
+            ShoulderCamera.GetComponent<CameraController>().FadeIn();
+    }
+
     public IEnumerator SwapCamera()
     {
-        // TODO: trigger event when camera turns off to move the player
         if(TopDownCamera.activeInHierarchy)
         {
             if(!TopDownCamera.GetComponent<CameraController>().IsFading)
@@ -155,7 +174,6 @@ public class PlayerController : MonoBehaviour
         else
             StartCoroutine(Teleport(p_PlayerWarpLocation, null));
     }
-
 
     public IEnumerator Teleport(Transform p_Location, Transform p_CompanionLocation = null) 
     {

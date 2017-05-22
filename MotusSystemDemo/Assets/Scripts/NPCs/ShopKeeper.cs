@@ -38,12 +38,9 @@ public class ShopKeeper : NPC, ITalkable
     {        
         PlayerController l_PlayerController = p_Player.GetComponent<PlayerController>();
 
-        StartCoroutine(l_PlayerController.SwapCamera());
+        StartCoroutine(l_PlayerController.StartDialogue(IDialoguePosition, transform.position));
         l_PlayerController.TheDialogueManager.StartDialogue(this, this);
         IInDialogue = true;
-        // TODO: link to after camera turns off
-        p_Player.transform.position = IDialoguePosition;
-        p_Player.transform.LookAt(transform.position);
         l_PlayerController.CanMove = false;
     }
 
