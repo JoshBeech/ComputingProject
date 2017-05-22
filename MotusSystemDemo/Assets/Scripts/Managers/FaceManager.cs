@@ -7,7 +7,6 @@ public class FaceManager : MonoBehaviour
     public static Dictionary<string, GameObject> BrownFaces = new Dictionary<string, GameObject>();
     public static Dictionary<string, GameObject> BlackFaces = new Dictionary<string, GameObject>();
 
-
     // Use this for initialization
     void Start()
     {
@@ -38,5 +37,12 @@ public class FaceManager : MonoBehaviour
             return BrownFaces[p_Face];        
         else
             return BlackFaces[p_Face];
+    }
+
+    void OnDestroy()
+    {
+        WhiteFaces.Clear();
+        BrownFaces.Clear();
+        BlackFaces.Clear();
     }
 }

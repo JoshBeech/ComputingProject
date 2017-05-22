@@ -90,7 +90,6 @@ public abstract class NPC : MonoBehaviour
 
     public void f_KingRescued(object sender, KingRescuedEventArgs e)
     {
-        Debug.Log("King has been rescued");
         Reaction(e_EmotionsState.SURPRISE, 1.0f);
         Reaction(e_EmotionsState.JOY, 1.5f);
     }

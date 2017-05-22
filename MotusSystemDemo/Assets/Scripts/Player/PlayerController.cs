@@ -45,6 +45,12 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if(TopDownCamera.activeInHierarchy && Input.GetButtonDown("Pause"))
+        {
+            TopDownCamera.GetComponent<PauseMenu>().Reveal();
+            enabled = false;
+        }
+
         if(CanInteract && Input.GetButtonDown("Interact"))
         {            
             IInteractable InteractableComponent = InteractableObject.GetComponent<IInteractable>();
