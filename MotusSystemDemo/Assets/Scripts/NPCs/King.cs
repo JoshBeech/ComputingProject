@@ -6,15 +6,10 @@ using MotusSystem;
 public class King : NPC, ITalkable
 {
     public DialogueManager IManager { get; set; }
-
     public Vector3 IDialoguePosition { get; set; }
-
     public bool IInDialogue { get; set; }
-
     public List<string> ITextLines { get; set; }
-
     public List<string> IWheelOptions1 { get; set; }
-
     public List<string> IWheelOptions2 { get; set; }
 
     [Header("King Variables")]

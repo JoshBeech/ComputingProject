@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Xml;
 using System.Collections.Generic;
 using MotusSystem;
 
@@ -10,6 +11,8 @@ public class ShopKeeper : NPC, ITalkable
     public List<string> ITextLines { get; set; }
     public List<string> IWheelOptions1 { get; set; }
     public List<string> IWheelOptions2 { get; set; }
+
+    public XmlDocument NPCDialogue;
 
     new void Start()
     {

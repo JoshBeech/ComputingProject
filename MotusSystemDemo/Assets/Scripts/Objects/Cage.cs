@@ -9,11 +9,13 @@ public class Cage : MonoBehaviour, IInteractable
     void Start()
     {
         PrisonerWarpLocation = transform.Find("PrisonerWarpPoint");
+        Prisoner.GetComponent<King>().enabled = false;
     }
 
     public void Interact(GameObject p_Player)
     {
         // Release prisoner
         Prisoner.transform.position = PrisonerWarpLocation.transform.position;
+        Prisoner.GetComponent<King>().enabled = true;
     }
 }

@@ -9,46 +9,52 @@ public class InteractSearch : MonoBehaviour
 
     private SphereCollider m_SphereCollider;
     private PlayerController m_PlayerController;
+    private int InteractionLayerMask;
     // Use this for initialization
     void Start()
     {
         m_SphereCollider = GetComponent<SphereCollider>();
         m_PlayerController = GetComponentInParent<PlayerController>();
         InteractPrompt.enabled = false;
+        InteractionLayerMask = LayerMask.GetMask("Interactable");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(m_InteractableObjects.Count > 0)
+        if (m_InteractableObjects.Count > 0)
         {
-            foreach(KeyValuePair<string, GameObject> l_InteractableObject in m_InteractableObjects)
+
+            RaycastHit l_Hit = new RaycastHit();
+
+            if (Physics.Raycast(transform.position, transform.forward, out l_Hit, m_SphereCollider.radius, InteractionLayerMask))
             {
-                if(Physics.Raycast(transform.position, transform.forward, m_SphereCollider.radius))
-                {             
-                    if(!InteractPrompt.enabled)
+                if (m_InteractableObjects.ContainsKey(l_Hit.transform.name))
+                {
+                    if (!InteractPrompt.enabled)
                         InteractPrompt.enabled = true;
 
                     if (!m_PlayerController.CanInteract)
                     {
                         m_PlayerController.CanInteract = true;
-                        m_PlayerController.InteractableObject = l_InteractableObject.Value;
+                        m_PlayerController.InteractableObject = m_InteractableObjects[l_Hit.transform.name];
                     }
 
-                    InteractPrompt.text = "Press E to interact with " + l_InteractableObject.Key;
-                }
-                else
-                {
-                    if(InteractPrompt.enabled)
-                        InteractPrompt.enabled = false;
-
-                    if (m_PlayerController.CanInteract)
-                    {
-                        m_PlayerController.CanInteract = false;
-                        m_PlayerController.InteractableObject = null;
-                    }
+                    InteractPrompt.text = "Press E to interact with " + l_Hit.transform.name;
                 }
             }
+            else
+            {
+                if (InteractPrompt.enabled)
+                    InteractPrompt.enabled = false;
+
+                if (m_PlayerController.CanInteract)
+                {
+                    m_PlayerController.CanInteract = false;
+                    m_PlayerController.InteractableObject = null;
+                }
+            }
+
         }
     }
 
@@ -65,6 +71,7 @@ public class InteractSearch : MonoBehaviour
         if (m_InteractableObjects.ContainsKey(p_OtherCollider.name))
         {
             m_InteractableObjects.Remove(p_OtherCollider.name);
+            m_PlayerController.InteractableObject = null;
         }
     }
 }
